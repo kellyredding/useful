@@ -1,4 +1,4 @@
-module UsefulHelpers
+module Useful
   module Version
     
     MAJOR = 0
