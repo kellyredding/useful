@@ -91,8 +91,10 @@ module Useful
       #  # => "id=thomas_hardy"
       #  {:id => 23423, :since => Time.now}.to_http_str
       #  # => "since=Thu,%2021%20Jun%202007%2012:10:05%20-0500&id=23423"
-      def to_http_str
-        self.empty? ? '' : self.collect{|key, val| "#{key.to_s}=#{CGI.escape(val.to_s)}"}.join('&')
+      def to_http_query_str(opts = {})
+        opts[:prepend] ||= '?'
+        opts[:append] ||= ''
+        self.empty? ? '' : "#{opts[:prepend]}#{self.collect{|key, val| "#{key.to_s}=#{CGI.escape(val.to_s)}"}.join('&')}#{opts[:append]}"
       end
 
       def to_html_attrs
