@@ -97,6 +97,28 @@ module Useful
         self.class.pad_precision(self.to_precision(opts[:precision]).with_delimiter(opts.only(:separator, :delimiter)), opts) rescue self
       end
 
+      # Formats a +number+ as a percentage string (e.g., 65%). You can customize the
+      # format in the +options+ hash.
+      #
+      # ==== Options
+      # * <tt>:precision</tt>  - Sets the level of precision (defaults to 2).
+      # * <tt>:separator</tt>  - Sets the separator between the units (defaults to ".").
+      # * <tt>:delimiter</tt>  - Sets the thousands delimiter (defaults to "").
+      #
+      # ==== Examples
+      #  100.to_percentage                                        # => 100.00%
+      #  100.to_percentage(:precision => 0)                       # => 100%
+      #  1000.to_percentage(:delimiter => '.', :separator => ',') # => 1.000,00%
+      #  302.24398923423.to_percentage(:precision => 5)           # => 302.24399%
+      def to_percentage(opts = {})
+        opts.symbolize_keys!
+        opts[:locale] = :en if opts.empty?
+        locale = LOCALES[opts.delete(:locale)]
+        opts.merge!(locale[:defaults]).merge!(locale[:format]) unless locale.nil?
+
+        "#{self.with_precision(opts.only(:precision, :separator, :delimiter))}%" rescue self
+      end
+
       # Formats a +number+ into a currency string (e.g., $13.65). You can customize the format
       # in the +options+ hash.
       # => taken and inspired from ActionView::Helpers::NumberHelper (http://api.rubyonrails.org/)
@@ -125,7 +147,6 @@ module Useful
         opts[:locale] = :en if opts.empty?
         locale = LOCALES[opts.delete(:locale)]
         opts.merge!(locale[:defaults]).merge!(locale[:format]).merge!(locale[:currency]) unless locale.nil?
-        opts[:separator] = '' if opts[:precision] == 0
 
         opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, opts[:unit]) rescue self
       end
@@ -171,40 +192,6 @@ module Useful
           end
           str << " x #{opts[:extension]}" unless opts[:extension].blank?
           str
-        rescue
-          number
-        end
-      end
-
-      # Formats a +number+ as a percentage string (e.g., 65%). You can customize the
-      # format in the +options+ hash.
-      #
-      # ==== Options
-      # * <tt>:precision</tt>  - Sets the level of precision (defaults to 3).
-      # * <tt>:separator</tt>  - Sets the separator between the units (defaults to ".").
-      # * <tt>:delimiter</tt>  - Sets the thousands delimiter (defaults to "").
-      #
-      # ==== Examples
-      #  number_to_percentage(100)                                        # => 100.000%
-      #  number_to_percentage(100, :precision => 0)                       # => 100%
-      #  number_to_percentage(1000, :delimiter => '.', :separator => ',') # => 1.000,000%
-      #  number_to_percentage(302.24398923423, :precision => 5)           # => 302.24399%
-      def number_to_percentage(number, options = {})
-        options.symbolize_keys!
-
-        defaults   = I18n.translate(:'number.format', :locale => options[:locale], :raise => true) rescue {}
-        percentage = I18n.translate(:'number.percentage.format', :locale => options[:locale], :raise => true) rescue {}
-        defaults  = defaults.merge(percentage)
-
-        precision = options[:precision] || defaults[:precision]
-        separator = options[:separator] || defaults[:separator]
-        delimiter = options[:delimiter] || defaults[:delimiter]
-
-        begin
-          number_with_precision(number,
-            :precision => precision,
-            :separator => separator,
-            :delimiter => delimiter) + "%"
         rescue
           number
         end
