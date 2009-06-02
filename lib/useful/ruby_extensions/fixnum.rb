@@ -4,11 +4,7 @@ module Useful
       
       # returns a string reprensentation of the number padded with pad_num to a specified length
       def pad(length = 3, pad_num = 0)
-        begin
-          self.to_s.rjust(length,pad_num.to_s)
-        rescue
-          self.to_s
-        end
+        self.to_s.rjust(length,pad_num.to_s) rescue self.to_s
       end
 
       # return the value in values that is nearest to the number

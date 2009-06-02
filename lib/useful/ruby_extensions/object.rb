@@ -9,6 +9,10 @@ module Useful
       def true?
         self == true
       end
+      
+      def blank?
+        self.nil? || self.empty? rescue false
+      end
 
     end
   end
