@@ -48,9 +48,9 @@ module Useful
       def with_delimiter(opts = {})
         number = self.to_s.strip
         opts.symbolize_keys!
-        opts[:locale] = :en if opts.empty?
+        opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
-        opts.merge!(locale[:format]) unless locale.nil?
+        opts = locale[:format].merge(opts) unless locale.nil?
         opts[:delimiter] ||= ','
         opts[:separator] ||= '.'
 
@@ -89,9 +89,9 @@ module Useful
       #  # => 1,111.23
       def with_precision(opts = {})
         opts.symbolize_keys!
-        opts[:locale] = :en if opts.empty?
+        opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
-        opts.merge!(locale[:defaults]).merge!(locale[:format]) unless locale.nil?
+        opts = locale[:defaults].merge(locale[:format]).merge(opts) unless locale.nil?
         opts[:precision] ||= 2
         
         self.class.pad_precision(self.to_precision(opts[:precision]).with_delimiter(opts.only(:separator, :delimiter)), opts) rescue self
@@ -112,9 +112,9 @@ module Useful
       #  302.24398923423.to_percentage(:precision => 5)           # => 302.24399%
       def to_percentage(opts = {})
         opts.symbolize_keys!
-        opts[:locale] = :en if opts.empty?
+        opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
-        opts.merge!(locale[:defaults]).merge!(locale[:format]) unless locale.nil?
+        opts = locale[:defaults].merge(locale[:format]).merge(opts) unless locale.nil?
 
         "#{self.with_precision(opts.only(:precision, :separator, :delimiter))}%" rescue self
       end
@@ -129,7 +129,6 @@ module Useful
       # * <tt>:separator</tt>  - Sets the separator between the units (defaults to ".").
       # * <tt>:delimiter</tt>  - Sets the thousands delimiter (defaults to ",").
       # * <tt>:format</tt>     - Sets the format of the output string (defaults to "%u%n"). The field types are:
-      #
       #     %u  The currency unit
       #     %n  The number
       #
@@ -144,11 +143,11 @@ module Useful
       #  # => 1234567890,50 &pound;
       def to_currency(opts = {})
         opts.symbolize_keys!
-        opts[:locale] = :en if opts.empty?
+        opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
-        opts.merge!(locale[:defaults]).merge!(locale[:format]).merge!(locale[:currency]) unless locale.nil?
+        opts = locale[:defaults].merge(locale[:format]).merge(locale[:currency]).merge(opts) unless locale.nil?
 
-        opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, opts[:unit]) rescue self
+        opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, opts[:unit]) #rescue self
       end
 
       # Provides methods for converting numbers into formatted strings.
