@@ -190,6 +190,15 @@ module Useful
         end
       end
 
+      # Returns the string representation of the number's +parity+.
+      #
+      # ==== Examples
+      #  1.to_parity                                          # => "odd"
+      #  2.to_parity                                          # => "even"
+      def to_parity
+        self.to_i.even? ? 'even' : 'odd'
+      end
+
       # Provides methods for converting numbers into formatted strings.
       # Methods are provided for phone numbers, currency, percentage,
       # precision, positional notation, and file size.
