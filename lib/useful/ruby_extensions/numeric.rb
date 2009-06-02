@@ -9,10 +9,12 @@ module Useful
       LOCALES = {
         :en => {
           :currency => {:format => "%u%n", :unit=> '$'},
+          :storage => {:format => "%n %u", :delimiter => ''},
           :format => {:delimiter => ',', :separator => '.'},
           :defaults => {:precision => 2}
         }
-      }
+      }.freeze
+      STORAGE_UNITS = [:bytes, :kb, :mb, :gb, :tb].freeze
 
       module ClassMethods; end
       def self.included(klass)
@@ -150,6 +152,44 @@ module Useful
         opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, opts[:unit]) #rescue self
       end
 
+      # Formats the bytes in +size+ into a more understandable representation
+      # (e.g., giving it 1500 yields 1.5 KB). This method is useful for
+      # reporting file sizes to users. This method returns nil if
+      # +size+ cannot be converted into a number. You can customize the
+      # format in the +options+ hash.
+      #
+      # ==== Options
+      # * <tt>:precision</tt>  - Sets the level of precision (defaults to 2).
+      # * <tt>:separator</tt>  - Sets the separator between the units (defaults to ".").
+      # * <tt>:delimiter</tt>  - Sets the thousands delimiter (defaults to "").
+      #
+      # ==== Examples
+      #  123.to_storage_size                                          # => 123 Bytes
+      #  1234.to_storage_size                                         # => 1.2 KB
+      #  12345.to_storage_size                                        # => 12.1 KB
+      #  1234567.to_storage_size                                      # => 1.2 MB
+      #  1234567890.to_storage_size                                   # => 1.1 GB
+      #  1234567890123.to_storage_size                                # => 1.1 TB
+      #  1234567.to_storage_size(:precision => 2)                     # => 1.18 MB
+      #  483989.to_storage_size(:precision => 0)                      # => 473 KB
+      #  1234567.to_storage_size(:precision => 2, :separator => ',')  # => 1,18 MB
+      def to_storage_size(opts = {})
+        return nil if self.nil?
+        opts.symbolize_keys!
+        opts[:locale] ||= :en
+        locale = LOCALES[opts.delete(:locale)]
+        opts = locale[:defaults].merge(locale[:format]).merge(locale[:storage]).merge(opts) unless locale.nil?
+        opts[:format] ||= "%n %u"
+
+        value = self.to_f
+        unit = ''
+        STORAGE_UNITS.each do |storage_unit|
+          unit = storage_unit.to_s.capitalize
+          return opts[:format].gsub(/%n/, value.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, unit) if value < 1024 || storage_unit == STORAGE_UNITS.last
+          value /= 1024.0
+        end
+      end
+
       # Provides methods for converting numbers into formatted strings.
       # Methods are provided for phone numbers, currency, percentage,
       # precision, positional notation, and file size.
@@ -193,83 +233,6 @@ module Useful
           str
         rescue
           number
-        end
-      end
-
-      STORAGE_UNITS = [:byte, :kb, :mb, :gb, :tb].freeze
-
-      # Formats the bytes in +size+ into a more understandable representation
-      # (e.g., giving it 1500 yields 1.5 KB). This method is useful for
-      # reporting file sizes to users. This method returns nil if
-      # +size+ cannot be converted into a number. You can customize the
-      # format in the +options+ hash.
-      #
-      # ==== Options
-      # * <tt>:precision</tt>  - Sets the level of precision (defaults to 1).
-      # * <tt>:separator</tt>  - Sets the separator between the units (defaults to ".").
-      # * <tt>:delimiter</tt>  - Sets the thousands delimiter (defaults to "").
-      #
-      # ==== Examples
-      #  number_to_human_size(123)                                          # => 123 Bytes
-      #  number_to_human_size(1234)                                         # => 1.2 KB
-      #  number_to_human_size(12345)                                        # => 12.1 KB
-      #  number_to_human_size(1234567)                                      # => 1.2 MB
-      #  number_to_human_size(1234567890)                                   # => 1.1 GB
-      #  number_to_human_size(1234567890123)                                # => 1.1 TB
-      #  number_to_human_size(1234567, :precision => 2)                     # => 1.18 MB
-      #  number_to_human_size(483989, :precision => 0)                      # => 473 KB
-      #  number_to_human_size(1234567, :precision => 2, :separator => ',')  # => 1,18 MB
-      #
-      # You can still use <tt>number_to_human_size</tt> with the old API that accepts the
-      # +precision+ as its optional second parameter:
-      #  number_to_human_size(1234567, 2)    # => 1.18 MB
-      #  number_to_human_size(483989, 0)     # => 473 KB
-      def number_to_human_size(number, *args)
-        return nil if number.nil?
-
-        options = args.extract_options!
-        options.symbolize_keys!
-
-        defaults = I18n.translate(:'number.format', :locale => options[:locale], :raise => true) rescue {}
-        human    = I18n.translate(:'number.human.format', :locale => options[:locale], :raise => true) rescue {}
-        defaults = defaults.merge(human)
-
-        unless args.empty?
-          ActiveSupport::Deprecation.warn('number_to_human_size takes an option hash ' +
-            'instead of a separate precision argument.', caller)
-          precision = args[0] || defaults[:precision]
-        end
-
-        precision ||= (options[:precision] || defaults[:precision])
-        separator ||= (options[:separator] || defaults[:separator])
-        delimiter ||= (options[:delimiter] || defaults[:delimiter])
-
-        storage_units_format = I18n.translate(:'number.human.storage_units.format', :locale => options[:locale], :raise => true)
-
-        if number.to_i < 1024
-          unit = I18n.translate(:'number.human.storage_units.units.byte', :locale => options[:locale], :count => number.to_i, :raise => true)
-          storage_units_format.gsub(/%n/, number.to_i.to_s).gsub(/%u/, unit)
-        else
-          max_exp  = STORAGE_UNITS.size - 1
-          number   = Float(number)
-          exponent = (Math.log(number) / Math.log(1024)).to_i # Convert to base 1024
-          exponent = max_exp if exponent > max_exp # we need this to avoid overflow for the highest unit
-          number  /= 1024 ** exponent
-
-          unit_key = STORAGE_UNITS[exponent]
-          unit = I18n.translate(:"number.human.storage_units.units.#{unit_key}", :locale => options[:locale], :count => number, :raise => true)
-
-          begin
-            escaped_separator = Regexp.escape(separator)
-            formatted_number = number_with_precision(number,
-              :precision => precision,
-              :separator => separator,
-              :delimiter => delimiter
-            ).sub(/(\d)(#{escaped_separator}[1-9]*)?0+\z/, '\1\2').sub(/#{escaped_separator}\z/, '')
-            storage_units_format.gsub(/%n/, formatted_number).gsub(/%u/, unit)
-          rescue
-            number
-          end
         end
       end
       
