@@ -98,7 +98,7 @@ module Useful
             names = camel_cased_word.split('::')
             names.shift if names.empty? || names.first.empty?
 
-            constant = Object
+            constant = ::Object
             names.each do |name|
               constant = constant.const_defined?(name) ? constant.const_get(name) : constant.const_missing(name)
             end
@@ -109,7 +109,7 @@ module Useful
             names = camel_cased_word.split('::')
             names.shift if names.empty? || names.first.empty?
 
-            constant = Object
+            constant = ::Object
             names.each do |name|
               constant = constant.const_get(name, false) || constant.const_missing(name)
             end

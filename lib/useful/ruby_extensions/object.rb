@@ -1,6 +1,6 @@
 module Useful
   module RubyExtensions
-    module ObjectExt
+    module Object
       
       def false?
         self == false
@@ -15,5 +15,5 @@ module Useful
 end
 
 class Object
-  include Useful::RubyExtensions::ObjectExt
+  include Useful::RubyExtensions::Object
 end
