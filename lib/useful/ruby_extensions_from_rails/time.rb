@@ -1,4 +1,6 @@
-#require 'active_support/duration'
+require File.join(File.dirname(__FILE__), 'object') unless Object.new.respond_to?(:acts_like?)
+require File.join(File.dirname(__FILE__), 'duration')
+require File.join(File.dirname(__FILE__), 'numeric')
 
 module Useful
   module RubyExtensionsFromRails
@@ -47,6 +49,18 @@ module Useful
         def local_time(*args)
           time_with_datetime_fallback(:local, *args)
         end
+
+        # Returns Time.now
+        def current
+          ::Time.now
+        end
+        
+      end
+
+      # Enable more predictable duck-typing on Time-like classes. See
+      # Object#acts_like?.
+      def acts_like_time?
+        true
       end
 
       # Tells whether the Time object's time lies in the past
@@ -105,6 +119,25 @@ module Useful
         seconds_to_advance = (options[:seconds] || 0) + (options[:minutes] || 0) * 60 + (options[:hours] || 0) * 3600
         seconds_to_advance == 0 ? time_advanced_by_date : time_advanced_by_date.since(seconds_to_advance)
       end
+
+      # Returns a new Time representing the time a number of seconds ago, this is basically a wrapper around the Numeric extension
+      def ago(seconds)
+        self.since(-seconds)
+      end
+
+      # Returns a new Time representing the time a number of seconds since the instance time, this is basically a wrapper around
+      # the Numeric extension.
+      def since(seconds)
+        f = seconds.since(self)
+        if Useful::RubyExtensionsFromRails::Duration === seconds
+          f
+        else
+          initial_dst = self.dst? ? 1 : 0
+          final_dst   = f.dst? ? 1 : 0
+          (seconds.abs >= 86400 && initial_dst != final_dst) ? f + (initial_dst - final_dst).hours : f
+        end
+      end
+      alias :in :since
 
       # Returns a new Time representing the time a number of specified months ago
       def months_ago(months)

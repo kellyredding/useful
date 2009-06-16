@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'object') unless Object.new.respond_to?(:acts_like?)
+require File.join(File.dirname(__FILE__), 'duration')
 
 module Useful
   module RubyExtensionsFromRails
@@ -43,11 +44,17 @@ module Useful
           ::Date.today.tomorrow
         end
 
-        # Returns Time.zone.today when config.time_zone is set, otherwise just returns Date.today.
+        # Returns Date.today.
         def current
           ::Date.today
         end
         
+      end
+
+      # Enable more predictable duck-typing on Date-like classes. See
+      # Object#acts_like?.
+      def acts_like_date?
+        true
       end
 
       # Tells whether the Date object's date lies in the past

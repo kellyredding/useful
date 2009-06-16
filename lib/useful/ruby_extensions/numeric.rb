@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 's
 
 module Useful
   module RubyExtensions
-    module Numeric #:nodoc:
+    module Numeric
 
       LOCALES = {
         :en => {
