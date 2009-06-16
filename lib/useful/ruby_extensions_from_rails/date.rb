@@ -231,3 +231,7 @@ module Useful
     end
   end
 end
+
+class Date
+  include Useful::RubyExtensionsFromRails::Date
+end
