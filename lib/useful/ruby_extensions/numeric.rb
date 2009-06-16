@@ -144,6 +144,7 @@ module Useful
       #  1234567890.50.to_currency(:unit => "&pound;", :separator => ",", :delimiter => "", :format => "%n %u")
       #  # => 1234567890,50 &pound;
       def to_currency(opts = {})
+        return opts[:zero_display] if opts[:zero_display] && self == 0
         opts.symbolize_keys!
         opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
