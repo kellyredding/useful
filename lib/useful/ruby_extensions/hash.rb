@@ -1,5 +1,3 @@
-require 'cgi'
-
 module Useful
   module RubyExtensions
     module Hash
@@ -11,18 +9,6 @@ module Useful
 
       module ClassMethods
 
-        # inspired by ActiveSupport::CoreExtensions::Hash::Keys (http://api.rubyonrails.org/)
-        def stringify_keys(hash)
-          hash.keys.each{ |key| hash[(key.to_s rescue key)] ||= hash.delete(key) }
-          hash
-        end
-        
-        # inspired by from ActiveSupport::CoreExtensions::Hash::Keys (http://api.rubyonrails.org/)
-        def symbolize_keys(hash)
-          hash.keys.each{ |key| hash[(key.to_sym rescue key)] ||= hash.delete(key) }
-          hash
-        end
-        
         def only(hash, *keys)
           hash.delete_if{ |k,v| !keys.flatten.include?(k) }
           hash
@@ -33,24 +19,6 @@ module Useful
           hash
         end
         
-      end
-
-      # Return a new hash with all keys converted to strings.
-      def stringify_keys
-        self.class.stringify_keys(self.clone)
-      end
-      # Destructively convert all keys to strings. 
-      def stringify_keys!
-        self.class.stringify_keys(self)
-      end
-
-      # Return a new hash with all keys converted to strings.
-      def symbolize_keys
-        self.class.symbolize_keys(self.clone)
-      end
-      # Destructively convert all keys to strings. 
-      def symbolize_keys!
-        self.class.symbolize_keys(self)
       end
 
       # Return a new hash with only keys in *keys
@@ -87,11 +55,12 @@ module Useful
 
       # Returns string formatted for HTTP URL encoded name-value pairs.
       # For example,
-      #  {:id => 'thomas_hardy'}.to_http_str 
-      #  # => "id=thomas_hardy"
-      #  {:id => 23423, :since => Time.now}.to_http_str
-      #  # => "since=Thu,%2021%20Jun%202007%2012:10:05%20-0500&id=23423"
+      #  {:id => 'thomas_hardy'}.to_http_query_str 
+      #  # => "?id=thomas_hardy"
+      #  {:id => 23423, :since => Time.now}.to_http_query_str
+      #  # => "?since=Thu,%2021%20Jun%202007%2012:10:05%20-0500&id=23423"
       def to_http_query_str(opts = {})
+        require 'cgi' unless defined?(CGI) && defined?(CGI::escape)
         opts[:prepend] ||= '?'
         opts[:append] ||= ''
         self.empty? ? '' : "#{opts[:prepend]}#{self.collect{|key, val| "#{key.to_s}=#{CGI.escape(val.to_s)}"}.join('&')}#{opts[:append]}"

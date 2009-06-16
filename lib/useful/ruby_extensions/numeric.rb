@@ -1,6 +1,6 @@
-require File.join(File.dirname(__FILE__), 'object')
-require File.join(File.dirname(__FILE__), 'string')
-require File.join(File.dirname(__FILE__), 'hash')
+require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'object') unless Object.new.respond_to?(:blank?)
+require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'hash') unless Hash.new.respond_to?(:symbolize_keys!)
+require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'string') unless String.new.respond_to?(:starts_with?)
 
 module Useful
   module RubyExtensions

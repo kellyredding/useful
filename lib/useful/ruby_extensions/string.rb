@@ -30,10 +30,6 @@ module Useful
         !self.match(pattern).nil?
       end
       
-      def starts_with?(string)
-        self.match?(Regexp.new("\\A#{string}"))
-      end
-
       def show_regexp(re)
         if self =~ re
           "#{$`}<<#{$&}>>#{$'}"

@@ -20,7 +20,7 @@ module Useful
         end
         value
       end
-
+      
     end
   end
 end
