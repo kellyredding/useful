@@ -42,7 +42,7 @@ module Useful
       # Determines if a value exists for the provided key(s).  Allows searching in nested hashes
       def check_value?(*keys)
         val = self[keys.first] || self[keys.first.to_s]
-        val = self[keys.first.to_s.intern] unless val || keys.first.kind_of?(Symbol) 
+        val = self[keys.first.to_s.intern] unless val || keys.first.to_s.empty? || keys.first.kind_of?(Symbol) 
         return val.check_value?(*keys[1..-1]) if val.kind_of?(Hash) && keys.length > 1
         return true if val && !val.empty?
         false

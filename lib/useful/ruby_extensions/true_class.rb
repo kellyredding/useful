@@ -5,6 +5,7 @@ module Useful
       def to_affirmative
         "Yes"
       end
+      alias :to_casual_s :to_affirmative
 
       def to_i
         1

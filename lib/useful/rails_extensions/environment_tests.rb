@@ -39,6 +39,9 @@ module ActiveRecord
   class Base
     include Useful::RailsExtensions::EnvironmentTests
   end
+  class Observer
+    include Useful::RailsExtensions::EnvironmentTests
+  end
 end
 module ActionController
   class Base
