@@ -121,8 +121,8 @@ module Useful
 
       def camelize(first_letter = :upper)
         case first_letter
-          when :upper then String.camelize(self, true)
-          when :lower then String.camelize(self, false)
+          when :upper then ::String.camelize(self, true)
+          when :lower then ::String.camelize(self, false)
         end
       end
       alias_method :camelcase, :camelize
