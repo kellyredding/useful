@@ -144,13 +144,13 @@ module Useful
       #  1234567890.50.to_currency(:unit => "&pound;", :separator => ",", :delimiter => "", :format => "%n %u")
       #  # => 1234567890,50 &pound;
       def to_currency(opts = {})
-        return opts[:zero_display] if opts[:zero_display] && self == 0
+        return opts[:zero_display] if opts[:zero_display] && self.to_f == 0.to_f
         opts.symbolize_keys!
         opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
         opts = locale[:defaults].merge(locale[:format]).merge(locale[:currency]).merge(opts) unless locale.nil?
 
-        opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, opts[:unit]) #rescue self
+        opts[:format].gsub(/%n/, self.with_precision(opts.only(:precision, :delimiter, :separator)).to_s).gsub(/%u/, opts[:unit].to_s) #rescue self
       end
 
       # Formats the bytes in +size+ into a more understandable representation
@@ -186,7 +186,7 @@ module Useful
         unit = ''
         STORAGE_UNITS.each do |storage_unit|
           unit = storage_unit.to_s.capitalize
-          return opts[:format].gsub(/%n/, value.with_precision(opts.only(:precision, :delimiter, :separator))).gsub(/%u/, unit) if value < 1024 || storage_unit == STORAGE_UNITS.last
+          return opts[:format].gsub(/%n/, value.with_precision(opts.only(:precision, :delimiter, :separator)).to_s).gsub(/%u/, unit.to_s) if value < 1024 || storage_unit == STORAGE_UNITS.last
           value /= 1024.0
         end
       end
