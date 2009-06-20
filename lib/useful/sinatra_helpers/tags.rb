@@ -13,6 +13,10 @@ module Sinatra
         tag(:a, options) { content }
       end
 
+      def mail_link_to(email)
+        link_to email, "mailto: #{email}"
+      end
+
       # helper to emulate 'image_tag'
       # => inspired from vanntastic-sinatra-gen gem, http://github.com/vanntastic/sinatra-gen/tree/master
       # helper for image_tags
