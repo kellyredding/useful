@@ -23,7 +23,7 @@ module Sinatra
       # EX : image_tag 'logo.jpg'
       #  => <img src="images/logo.jpg" />
       def image_tag(src,options={})
-        options[:src] = ['/'].include?(src.first) ? src : "/images/#{src}"
+        options[:src] = ['/'].include?(src[0..0]) ? src : "/images/#{src}"
         tag(:img, options)
       end
 
