@@ -12,8 +12,7 @@ module Sinatra
         # 
         # foo will be rendered once for each element in the array, passing in a local variable named "foo"
         # Usage: partial :foo, :collection => @my_foos    
-        def partial(template, *args)
-          options = args.extract_options!
+        def partial(template, options={})
           options.merge!(:layout => false)
           path = template.to_s.split(File::SEPARATOR)
           object = path[-1].to_sym
