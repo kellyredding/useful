@@ -3,11 +3,10 @@ module Useful
     
     MAJOR = 0
     MINOR = 1
-    TINY  = 8
-    FIX   = 5
+    TINY  = 9
     
     def self.to_s # :nodoc:
-      [MAJOR, MINOR, TINY, FIX].join('.')
+      [MAJOR, MINOR, TINY].join('.')
     end
     
   end

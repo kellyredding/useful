@@ -1,12 +1,11 @@
-def run_with_password(cmd, prompt = 'Password: ', confirmation = "Running '#{cmd}'", password = nil)
-  with_env("LC_ALL", "C") {
-    run cmd do |ch, stream, out|
-      password ||= Capistrano::CLI.password_prompt(prompt)
-      ch.send_data(password)
-      ch.send_data("\n")
-      log confirmation
-    end
-  }
+def run_with_password(cmd, options={})
+  prompt = options.delete(:prompt) || 'Password: '
+  password = options.delete(:password)
+  log (options.delete(:confirmation) || "Running: '#{cmd}'")
+  password ||= Capistrano::CLI.password_prompt(prompt)
+  run cmd, options do |ch, stream, out|
+    ch.send_data(password+"\n")
+  end
   password
 end
 
