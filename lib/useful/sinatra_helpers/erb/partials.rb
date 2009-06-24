@@ -1,6 +1,6 @@
 require 'sinatra/base'
 
-module Sinatra
+module Useful
   module SinatraHelpers
     module Erb
       module Partials
@@ -36,6 +36,6 @@ module Sinatra
       end
     end
   end
-  
-  Sinatra::Application.helpers Sinatra::SinatraHelpers::Erb::Partials
 end
+  
+Sinatra::Application.helpers Useful::SinatraHelpers::Erb::Partials

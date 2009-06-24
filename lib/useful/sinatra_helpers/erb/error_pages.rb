@@ -1,9 +1,10 @@
 require 'sinatra/base'
 
-module Sinatra
+module Useful
   module SinatraHelpers
     module Erb
       module ErrorPages
+        
         def self.registered(app)
           app.configure :production do
             app.not_found do
@@ -15,9 +16,10 @@ module Sinatra
             end
           end
         end
+        
       end
     end
   end
-  
-  Sinatra::Application.register Sinatra::SinatraHelpers::Erb::ErrorPages
 end
+
+Sinatra::Application.register Useful::SinatraHelpers::Erb::ErrorPages

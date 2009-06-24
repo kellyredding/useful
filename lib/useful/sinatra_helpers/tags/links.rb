@@ -7,7 +7,6 @@ module Sinatra
       module Links
         
         # helper to emulate action view's 'link_to'
-        # => inspired from vanntastic-sinatra-gen gem, http://github.com/vanntastic/sinatra-gen/tree/master
         # EX : link_to "google", "http://google.com"
         # => <a href="http://google.com">google</a>
         def link_to(content,href,options={})
@@ -20,8 +19,6 @@ module Sinatra
         end
 
         # helper to emulate 'image_tag'
-        # => inspired from vanntastic-sinatra-gen gem, http://github.com/vanntastic/sinatra-gen/tree/master
-        # helper for image_tags
         # EX : image_tag 'logo.jpg'
         #  => <img src="images/logo.jpg" />
         def image_tag(src,options={})
@@ -30,7 +27,6 @@ module Sinatra
         end
 
         # helper to emulate 'stylesheet_link_tag'
-        # => inspired from vanntastic-sinatra-gen gem, http://github.com/vanntastic/sinatra-gen/tree/master
         # EX : stylesheet_link_tag 'default'
         #  => <link rel="stylesheet" href="/stylesheets/default.css" type="text/css" media="all" title="no title" charset="utf-8">
         def stylesheet_link_tag(srcs,options={})
@@ -44,7 +40,6 @@ module Sinatra
         end
 
         # helper to emulate 'javascript_include_tag'
-        # => inspired from vanntastic-sinatra-gen gem, http://github.com/vanntastic/sinatra-gen/tree/master
         # EX : javascript_include_tag 'app'
         #  => <script src="/js/app.js" type="text/javascript" />  
         # EX : javascript_include_tag ['app', 'jquery']
