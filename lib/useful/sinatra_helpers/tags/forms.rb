@@ -26,10 +26,20 @@ module Useful
         end
         
         def hidden_field_tag(name, value=nil, options={}) 
-          input_tag(name, 'hidden', value, options)
+          input_tag('hidden', name, value, options)
         end
         
-        def check_box_tag(name, label=nil, value='1', checked=false, options={})
+        def password_field_tag(name="password", value=nil, options={}) 
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          input_tag('password', name, value, options)
+        end
+        
+        def file_field_tag(name, options={})
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          input_tag('file', name, nil, options)
+        end
+        
+       def check_box_tag(name, label=nil, value='1', checked=false, options={})
           options[:tag] ||= :div
           if options.has_key?(:class)
             options[:class] += ' checkbox'
@@ -38,7 +48,7 @@ module Useful
           end
           options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
           options[:checked] = sinatra_tag_helper_checked_option if checked
-          input_str = input_tag(name, 'checkbox', value, options)
+          input_str = input_tag('checkbox', name, value, options)
           if label.nil?
             input_str
           else
@@ -46,15 +56,52 @@ module Useful
           end
         end
         
-        def file_field_tag(name, options={})
+        def radio_button_tag(name, value, label, checked=false, options={}) 
+          options[:tag] ||= :span
+          if options.has_key?(:class)
+            options[:class] += ' radiobutton'
+          else
+            options[:class] = 'radiobutton'
+          end
           options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
-          input_tag(name, 'file', nil, options)
+          options[:checked] = sinatra_tag_helper_checked_option if checked
+          input_str = input_tag('radio', name, value, options)
+          if label.nil?
+            input_str
+          else
+            label_tag(name, input_str + tag(options.delete(:tag)) { label }, :class => options.delete(:class))
+          end
+        end
+        
+        def select_tag(name, option_tags=nil, options={}) 
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
+          options[:multiple] = sinatra_tag_helper_multiple_option if options[:multiple] == true
+          input_tag('select', name, nil, options) { option_tags || '' }
+        end
+
+        def text_area_tag(name, content=nil, options={}) 
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:tag] = 'textarea'
+          input_tag(nil, name, nil, options) { content || '' }
+        end
+        
+        def text_field_tag(name, value=nil, options={}) 
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          input_tag('text', name, value, options)
+        end
+        
+        def submit_tag(value="Save", options={}) 
+          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          input_tag('submit', 'commit', value, options)
         end
         
         def image_submit_tag(source, options={})
           options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:src] = source
+          input_tag('image', nil, nil, options)
         end
-
+        
       end
     end
   end

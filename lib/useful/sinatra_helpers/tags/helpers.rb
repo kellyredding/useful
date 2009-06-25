@@ -19,6 +19,10 @@ module Useful
           'checked'
         end
         
+        def sinatra_tag_helper_multiple_option
+          'multiple'
+        end
+        
         def sinatra_tag_helper_hash_to_html_attrs(a_hash)
           a_hash.collect{|key, val| "#{key}=\"#{val}\""}.join(' ')
         end

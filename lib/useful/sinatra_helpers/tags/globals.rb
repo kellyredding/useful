@@ -8,11 +8,14 @@ module Useful
         
         include Useful::SinatraHelpers::Tags::Helpers
         
-        def input_tag(name, type, value, options={}, &block)
+        def input_tag(type, name, value, options={}, &block)
           options[:tag] ||= :input
-          options[:id] ||= sinatra_tag_helper_safe_id(name)
+          options[:type] = type unless type.nil?
+          unless name.nil?
+            options[:name] = name 
+            options[:id] ||= sinatra_tag_helper_safe_id(name)
+          end
           options[:value] = value unless value.nil?
-          options.update :name => name, :type => type
           tag(options.delete(:tag), options, &block)
         end
 
