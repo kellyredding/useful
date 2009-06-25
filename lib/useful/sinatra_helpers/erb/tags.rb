@@ -3,17 +3,17 @@ require File.join(File.dirname(__FILE__), 'helpers.rb')
 
 module Useful
   module SinatraHelpers
-    module Tags
-      module Globals
+    module Erb
+      module Tags
         
-        include Useful::SinatraHelpers::Tags::Helpers
+        include Useful::SinatraHelpers::Erb::Helpers
         
         def input_tag(type, name, value, options={}, &block)
           options[:tag] ||= :input
           options[:type] = type unless type.nil?
           unless name.nil?
             options[:name] = name 
-            options[:id] ||= sinatra_tag_helper_safe_id(name)
+            options[:id] ||= sinatra_erb_helper_safe_id(name)
           end
           options[:value] = value unless value.nil?
           tag(options.delete(:tag), options, &block)
@@ -33,7 +33,7 @@ module Useful
         # EX : tag :h1, "shizam", :title => "shizam"
         # => <h1 title="shizam">shizam</h1>
         def tag(name, options={})
-          "<#{name.to_s} #{sinatra_tag_helper_hash_to_html_attrs(options)} #{block_given? ? ">#{yield}</#{name}" : "/"}>"
+          "<#{name.to_s} #{sinatra_erb_helper_hash_to_html_attrs(options)} #{block_given? ? ">#{yield}</#{name}" : "/"}>"
         end
         
       end      
@@ -41,5 +41,5 @@ module Useful
   end
 end
 
-Sinatra::Application.helpers Useful::SinatraHelpers::Tags::Globals
+Sinatra::Application.helpers Useful::SinatraHelpers::Erb::Tags
 

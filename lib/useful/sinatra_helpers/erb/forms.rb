@@ -1,29 +1,29 @@
 require 'sinatra/base'
 require File.join(File.dirname(__FILE__), 'helpers.rb')
-require File.join(File.dirname(__FILE__), 'globals.rb')
+require File.join(File.dirname(__FILE__), 'tags.rb')
 
 module Useful
   module SinatraHelpers
-    module Tags
+    module Erb
       module Forms
         
-        include Useful::SinatraHelpers::Tags::Helpers
+        include Useful::SinatraHelpers::Erb::Helpers
         
         def form_tag(url, options={}, &block) 
           options[:method] = 'post' unless ['get','post','put','delete'].include?(options[:method])
           options.update :action => url
           if multipart = options.delete(:multipart)
-            options[:enctype] = sinatra_tag_helper_multipart_option
+            options[:enctype] = sinatra_erb_helper_multipart_option
           end
           if block_given?
-            @_out_buf << tag(:form, options) { sinatra_tag_helper_capture(&block) }
+            @_out_buf << tag(:form, options) { sinatra_erb_helper_capture(&block) }
           else
             tag(:form, options)
           end
         end
         
         def field_set_tag(legend=nil, options=nil, &block)
-          content = "#{tag(:legend) { lengend.to_s } unless legend.nil?}#{sinatra_tag_helper_capture(&block)}"
+          content = "#{tag(:legend) { lengend.to_s } unless legend.nil?}#{sinatra_erb_helper_capture(&block)}"
           tag(:fieldset, options) { content }
         end
         
@@ -38,12 +38,12 @@ module Useful
         end
         
         def password_field_tag(name="password", value=nil, options={}) 
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           input_tag('password', name, value, options)
         end
         
         def file_field_tag(name, options={})
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           input_tag('file', name, nil, options)
         end
         
@@ -54,8 +54,8 @@ module Useful
           else
             options[:class] = 'checkbox'
           end
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
-          options[:checked] = sinatra_tag_helper_checked_option if checked
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
+          options[:checked] = sinatra_erb_helper_checked_option if checked
           input_str = input_tag('checkbox', name, value, options)
           if label.nil?
             input_str
@@ -71,8 +71,8 @@ module Useful
           else
             options[:class] = 'radiobutton'
           end
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
-          options[:checked] = sinatra_tag_helper_checked_option if checked
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
+          options[:checked] = sinatra_erb_helper_checked_option if checked
           input_str = input_tag('radio', name, value, options)
           if label.nil?
             input_str
@@ -82,30 +82,30 @@ module Useful
         end
         
         def select_tag(name, option_tags=nil, options={}) 
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
-          options[:multiple] = sinatra_tag_helper_multiple_option if options[:multiple] == true
+          options[:multiple] = sinatra_erb_helper_multiple_option if options[:multiple] == true
           input_tag('select', name, nil, options) { option_tags || '' }
         end
 
         def text_area_tag(name, content=nil, options={}) 
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           options[:tag] = 'textarea'
           input_tag(nil, name, nil, options) { content || '' }
         end
         
         def text_field_tag(name, value=nil, options={}) 
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           input_tag('text', name, value, options)
         end
         
         def submit_tag(value="Save", options={}) 
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           input_tag('submit', 'commit', value, options)
         end
         
         def image_submit_tag(source, options={})
-          options[:disabled] = sinatra_tag_helper_disabled_option if options[:disabled]
+          options[:disabled] = sinatra_erb_helper_disabled_option if options[:disabled]
           options[:src] = source
           input_tag('image', nil, nil, options)
         end
@@ -115,4 +115,4 @@ module Useful
   end
 end
 
-Sinatra::Application.helpers Useful::SinatraHelpers::Tags::Forms
+Sinatra::Application.helpers Useful::SinatraHelpers::Erb::Forms

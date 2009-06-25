@@ -1,9 +1,9 @@
 require 'sinatra/base'
-require File.join(File.dirname(__FILE__), 'globals.rb')
+require File.join(File.dirname(__FILE__), 'tags.rb')
 
 module Sinatra
   module SinatraHelpers
-    module Tags
+    module Erb
       module Links
         
         # helper to emulate action view's 'link_to'
@@ -63,5 +63,5 @@ module Sinatra
     end
   end
   
-  Sinatra::Application.helpers Sinatra::SinatraHelpers::Tags::Links
+  Sinatra::Application.helpers Sinatra::SinatraHelpers::Erb::Links
 end
