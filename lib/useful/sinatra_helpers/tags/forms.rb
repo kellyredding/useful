@@ -10,8 +10,16 @@ module Useful
         include Useful::SinatraHelpers::Tags::Helpers
         
         def form_tag(url, options={}, &block) 
+          options[:method] = 'post' unless ['get','post','put','delete'].include?(options[:method])
           options.update :action => url
-          tag(:form, options, &block)
+          if multipart = options.delete(:multipart)
+            options[:enctype] = sinatra_tag_helper_multipart_option
+          end
+          if block_given?
+            @_out_buf << tag(:form, options) { sinatra_tag_helper_capture(&block) }
+          else
+            tag(:form, options)
+          end
         end
         
         def field_set_tag(legend=nil, options=nil, &block)

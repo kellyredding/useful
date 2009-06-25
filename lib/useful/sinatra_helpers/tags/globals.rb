@@ -32,7 +32,7 @@ module Useful
         # emulator for 'tag'
         # EX : tag :h1, "shizam", :title => "shizam"
         # => <h1 title="shizam">shizam</h1>
-        def tag(name,options={})
+        def tag(name, options={})
           "<#{name.to_s} #{sinatra_tag_helper_hash_to_html_attrs(options)} #{block_given? ? ">#{yield}</#{name}" : "/"}>"
         end
         

@@ -8,7 +8,14 @@ module Useful
         end
         
         def sinatra_tag_helper_capture(*args, &block)
-          block.call(*args)
+          with_output_buffer { block.call(*args) }
+        end
+        def with_output_buffer(buf = '') #:nodoc:
+          @_out_buf, old_buffer = buf, @_out_buf
+          yield
+          @_out_buf
+        ensure
+          @_out_buf = old_buffer
         end
         
         def sinatra_tag_helper_disabled_option
@@ -21,6 +28,10 @@ module Useful
         
         def sinatra_tag_helper_multiple_option
           'multiple'
+        end
+        
+        def sinatra_tag_helper_multipart_option
+          'multipart/form-data'
         end
         
         def sinatra_tag_helper_hash_to_html_attrs(a_hash)
