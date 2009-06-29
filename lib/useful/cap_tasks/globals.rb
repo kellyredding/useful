@@ -31,4 +31,10 @@ def total_time_in_values(total_time)
   values
 end
 
-
+def hostname
+  val = ""
+  run "hostname" do |ch, stream, out|
+    val = out
+  end
+  val.strip
+end
