@@ -1,6 +1,7 @@
 require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'object') unless Object.new.respond_to?(:blank?)
 require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'hash') unless Hash.new.respond_to?(:symbolize_keys!)
 require File.join(File.dirname(__FILE__), '..', 'ruby_extensions_from_rails', 'string') unless String.new.respond_to?(:starts_with?)
+require File.join(File.dirname(__FILE__), 'hash') unless Hash.new.respond_to?(:only)
 
 module Useful
   module RubyExtensions
@@ -92,6 +93,7 @@ module Useful
       def with_precision(opts = {})
         opts.symbolize_keys!
         opts[:locale] ||= :en
+        opts[:delimiter] ||= ''
         locale = LOCALES[opts.delete(:locale)]
         opts = locale[:defaults].merge(locale[:format]).merge(opts) unless locale.nil?
         opts[:precision] ||= 2
