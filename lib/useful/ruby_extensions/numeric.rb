@@ -15,7 +15,7 @@ module Useful
           :defaults => {:precision => 2}
         }
       }.freeze
-      STORAGE_UNITS = [:bytes, :kb, :mb, :gb, :tb].freeze
+      STORAGE_UNITS = ['Bytes', 'KB', 'MB', 'GB', 'TB'].freeze
 
       module ClassMethods; end
       def self.included(klass)
@@ -179,16 +179,19 @@ module Useful
       def to_storage_size(opts = {})
         return nil if self.nil?
         opts.symbolize_keys!
+        opt_precision = opts[:precision]
         opts[:locale] ||= :en
         locale = LOCALES[opts.delete(:locale)]
         opts = locale[:defaults].merge(locale[:format]).merge(locale[:storage]).merge(opts) unless locale.nil?
         opts[:format] ||= "%n %u"
+        opts[:precision] = 0 unless opt_precision
 
         value = self.to_f
         unit = ''
         STORAGE_UNITS.each do |storage_unit|
-          unit = storage_unit.to_s.capitalize
+          unit = storage_unit.to_s
           return opts[:format].gsub(/%n/, value.with_precision(opts.only(:precision, :delimiter, :separator)).to_s).gsub(/%u/, unit.to_s) if value < 1024 || storage_unit == STORAGE_UNITS.last
+          opts[:precision] = 2 unless opt_precision
           value /= 1024.0
         end
       end
