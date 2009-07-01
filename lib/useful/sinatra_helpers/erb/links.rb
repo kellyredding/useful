@@ -13,6 +13,11 @@ module Sinatra
           options.update :href => href
           tag(:a, options) { content }
         end
+        
+        def open_link_to(content, href, options={})
+          options[:onclick] = "javascript: window.open('#{href}'); return false;"
+          link_to(content, href, options)
+        end
 
         def mail_link_to(email)
           link_to email, "mailto: #{email}"
