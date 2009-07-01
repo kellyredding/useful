@@ -26,8 +26,19 @@ module Useful
           tag(options.delete(:tag), options) { '' }
         end
 
+        # helpers to escape tag text content
         include Rack::Utils
         alias_method :h, :escape_html
+        
+        # escape tag text content and format for text like display
+        def h_text(text, opts={})
+          h(text.to_s).
+            gsub(/\r\n?/, "\n").  # \r\n and \r -> \n
+            split("\n").collect do |line|
+              line.nil? ? '': line.sub(/(\s+)?\S*/) {|lead| lead.gsub(/\s/,'&nbsp;')}
+            end.join("\n"). # change any leading white spaces on a line to '&nbsp;'
+            gsub(/\n/,'\1<br />') # newlines -> br added
+        end
 
         # emulator for 'tag'
         # EX : tag :h1, "shizam", :title => "shizam"
