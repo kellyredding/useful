@@ -23,6 +23,13 @@ module Sinatra
           link_to email, "mailto: #{email}"
         end
 
+        def link_to_function(content, function, opts={})
+          opts ||= {}
+          opts[:href] ||= 'javascript: void(0);'
+          opts[:onclick] = "javascript: #{function}; return false;"
+          link_to content, opts[:href], opts
+        end
+
         # helper to emulate 'image_tag'
         # EX : image_tag 'logo.jpg'
         #  => <img src="images/logo.jpg" />
