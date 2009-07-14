@@ -74,7 +74,7 @@ module Useful
         
         def log(level, msg)
           if(msg)
-            if @logger && @logger.respond_to(level)
+            if @logger && @logger.respond_to?(level)
               @logger.send(level.to_s, msg) 
             else
               puts "** [#{level.to_s.upcase}]: [Mailer] #{msg}"
