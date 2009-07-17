@@ -11,6 +11,11 @@ the pieces you are interested in.
 == Installation
 
     sudo gem install kelredd-useful --source http://gems.github.com
+    
+== Dependencies
+
+    json - http://json.rubyforge.org/ - for hash to/from json
+    
 
 == Usage
 

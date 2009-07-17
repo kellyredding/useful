@@ -1,3 +1,5 @@
+require 'json' unless defined?(JSON) && defined?(JSON::parse)
+
 module Useful
   module RubyExtensions
     module Hash
@@ -19,6 +21,10 @@ module Useful
           hash
         end
         
+        def from_json(string)
+          JSON.parse(string)
+        end
+        
       end
 
       # Return a new hash with only keys in *keys
@@ -38,7 +44,7 @@ module Useful
       def except!(*keys)
         self.class.except(self, keys)
       end
-
+      
       # Determines if a value exists for the provided key(s).  Allows searching in nested hashes
       def check_value?(*keys)
         val = self[keys.first] || self[keys.first.to_s]

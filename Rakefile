@@ -19,7 +19,7 @@ spec = Gem::Specification.new do |s|
   s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib,test}/**/*")
   # s.executables    = ['useful']
   
-  # s.add_dependency('gem_name', '~> 0.0.1')
+  s.add_dependency('json')
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
