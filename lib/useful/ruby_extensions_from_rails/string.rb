@@ -156,6 +156,14 @@ module Useful
         prefix = prefix.to_s
         self[0, prefix.length] == prefix
       end
+      
+      def to_datetime
+        ::DateTime.civil(*::Date._parse(self, false).values_at(:year, :mon, :mday, :hour, :min, :sec).map { |arg| arg || 0 }) rescue nil
+      end
+
+      def to_date
+        ::Date.civil(*::Date._parse(self, false).values_at(:year, :mon, :mday).map { |arg| arg || 0 }) rescue nil
+      end
 
     end
   end

@@ -37,7 +37,11 @@ module Useful
           "no match"
         end
       end
-
+      
+      def to_boolean
+        self =~ /^(true|1)$/i ? true : false
+      end
+      
     end
   end
 end
