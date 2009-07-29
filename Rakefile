@@ -20,6 +20,7 @@ spec = Gem::Specification.new do |s|
   # s.executables    = ['useful']
   
   s.add_dependency('json')
+  s.add_dependency('tmail')
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
