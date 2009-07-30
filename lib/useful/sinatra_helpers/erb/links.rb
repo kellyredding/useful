@@ -19,8 +19,8 @@ module Sinatra
           link_to(content, href, options)
         end
 
-        def mail_link_to(email)
-          link_to email, "mailto: #{email}"
+        def mail_link_to(email, options={})
+          link_to options[:label] || email, "mailto: #{email}"
         end
 
         def link_to_function(content, function, opts={})
