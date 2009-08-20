@@ -2,6 +2,8 @@
 # => I chose to copy the source in here instead of add yet another gem depencency
 # => I take no credit for this work, check out link for more info.
 
+require 'net/smtp'
+
 Net::SMTP.class_eval do
   private
   def do_start(helodomain, user, secret, authtype)
