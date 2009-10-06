@@ -10,7 +10,7 @@ the pieces you are interested in.
 
 == Installation
 
-    sudo gem install kelredd-useful --source http://gems.github.com
+    sudo gem install kelredd-useful --source http://gemcutter.org
     
 == Dependencies
 
