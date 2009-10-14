@@ -1,2 +1,2 @@
-$:.unshift File.dirname(__FILE__)
+module Useful; end
 p "don't require this file, require in sub modules as needed."

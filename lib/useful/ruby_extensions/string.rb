@@ -1,49 +1,48 @@
-module Useful
-  module RubyExtensions
-    module String
-      
-      module ClassMethods; end
-      def self.included(klass)
-        klass.extend(ClassMethods) if klass.kind_of?(Class)
-      end
+module Useful; end
+module Useful::RubyExtensions; end
 
-      module ClassMethods
+module Useful::RubyExtensions::String
+  
+  module ClassMethods; end
+  def self.included(klass)
+    klass.extend(ClassMethods) if klass.kind_of?(Class)
+  end
 
-        # adds the contents of a2 to a1, removing duplicates
-        def hsub(string, hash)
-          hash.each {|k,v| string.gsub!(":#{k}",v.to_s)}
-          string
-        end
-        
-      end
+  module ClassMethods
 
-      # returns a new string, with hash values sub'd in where hash keys exist in original string
-      def hsub(hash)
-        self.class.hsub(self.clone, hash)
-      end
-      # substitutes the keys in hash that exist in the string, with values of hash
-      def hsub!(hash)
-        self.class.hsub(self, hash)
-      end
+    # adds the contents of a2 to a1, removing duplicates
+    def hsub(string, hash)
+      hash.each {|k,v| string.gsub!(":#{k}",v.to_s)}
+      string
+    end
+    
+  end
 
-      def match?(pattern)
-        !self.match(pattern).nil?
-      end
-      
-      def show_regexp(re)
-        if self =~ re
-          "#{$`}<<#{$&}>>#{$'}"
-        else
-          "no match"
-        end
-      end
-      
-      def to_boolean
-        self =~ /^(true|1)$/i ? true : false
-      end
-      
+  # returns a new string, with hash values sub'd in where hash keys exist in original string
+  def hsub(hash)
+    self.class.hsub(self.clone, hash)
+  end
+  # substitutes the keys in hash that exist in the string, with values of hash
+  def hsub!(hash)
+    self.class.hsub(self, hash)
+  end
+
+  def match?(pattern)
+    !self.match(pattern).nil?
+  end
+  
+  def show_regexp(re)
+    if self =~ re
+      "#{$`}<<#{$&}>>#{$'}"
+    else
+      "no match"
     end
   end
+  
+  def to_boolean
+    self =~ /^(true|1)$/i ? true : false
+  end
+  
 end
 
 class String

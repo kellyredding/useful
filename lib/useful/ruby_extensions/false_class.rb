@@ -1,18 +1,17 @@
-module Useful
-  module RubyExtensions
-    module FalseClass
-      
-      def to_affirmative
-        "No"
-      end
-      alias :to_casual_s :to_affirmative
+module Useful; end
+module Useful::RubyExtensions; end
 
-      def to_i
-        0
-      end
-    
-    end
+module Useful::RubyExtensions::FalseClass
+  
+  def to_affirmative
+    "No"
   end
+  alias :to_casual_s :to_affirmative
+
+  def to_i
+    0
+  end
+
 end
 
 class FalseClass

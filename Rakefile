@@ -20,17 +20,10 @@ spec = Gem::Specification.new do |s|
   # s.executables    = ['useful']
   
   s.add_dependency('json')
-  s.add_dependency('tmail')
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
-end
-
-Rake::TestTask.new do |t|
-  t.libs << 'test'
-  t.test_files = FileList["test/**/*_test.rb"]
-  t.verbose = true
 end
 
 desc 'Generate the gemspec to serve this Gem from Github'
@@ -38,6 +31,12 @@ task :gemspec do
   file = File.dirname(__FILE__) + "/#{spec.name}.gemspec"
   File.open(file, 'w') {|f| f << spec.to_ruby }
   puts "Created gemspec: #{file}"
+end
+
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+  t.test_files = FileList["test/**/*_test.rb"]
+  t.verbose = true
 end
 
 require 'cucumber'
