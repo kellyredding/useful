@@ -90,13 +90,13 @@ class HashTest < Test::Unit::TestCase
     should "be able to convert to proper http query string" do
       @expected = "?name=thomas+hardy+%2F+thomas+handy"
       assert_equal @expected, {:name => 'thomas hardy / thomas handy'}.to_http_query_str 
-      @expected = "?since=2009-10-14&id=23423"
+      @expected = "?id=23423&since=2009-10-14"
       assert_equal @expected, {:id => 23423, :since => "2009-10-14"}.to_http_query_str
       @expected = "?id[]=1&id[]=2"
       assert_equal @expected, {:id => [1,2]}.to_http_query_str
-      @expected = "?poo[foo]=1&poo[bar]=2"
+      @expected = "?poo[bar]=2&poo[foo]=1"
       assert_equal @expected, {:poo => {:foo => 1, :bar => 2}}.to_http_query_str
-      @expected = "?poo[foo]=1&poo[bar][bar1]=1&poo[bar][bar2]=nasty"
+      @expected = "?poo[bar][bar1]=1&poo[bar][bar2]=nasty&poo[foo]=1"
       assert_equal @expected, {:poo => {:foo => 1, :bar => {:bar1 => 1, :bar2 => "nasty"}}}.to_http_query_str
       @expected = "name=johnson&this=suffix"
       assert_equal @expected, {:name => 'johnson'}.to_http_query_str(:prepend => '', :append => '&this=suffix')
