@@ -38,13 +38,13 @@ class HashWithIndifferentAccessTest < Test::Unit::TestCase
     end
 
     should "should return all keys except certain ones at the class level" do
-      assert_equal @abcs, HashWithIndifferentAccess.except(subject, @nums_keys)
+      assert_equal @abcs, HashWithIndifferentAccess.except(subject, *@nums_keys)
     end
     should "should return all keys except certain ones at the instance level" do
-      assert_equal @nums, subject.except(@abcs_keys)
+      assert_equal @nums, subject.except(*@abcs_keys)
     end
     should "should destructively return all keys except certain ones at the instance level" do
-      subject.except!(@abcs_keys)
+      subject.except!(*@abcs_keys)
       assert_equal @nums, subject
     end
 

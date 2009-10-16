@@ -91,30 +91,28 @@ module Useful::RubyExtensions::Hash
     #  # => "?poo[bar]=2&poo[foo]=1"
     #  {:poo => {:foo => 1, :bar => {:bar1 => 1, :bar2 => "nasty"}}}.to_http_query_str
     #  "?poo[bar][bar1]=1&poo[bar][bar2]=nasty&poo[foo]=1"
-    unless {}.respond_to?(:to_http_query_str) 
-      def to_http_query_str(opts = {})
-        require 'cgi' unless defined?(::CGI) && defined?(::CGI::escape)
-        opts[:prepend] ||= '?'
-        opts[:append] ||= ''
-        opts[:key_ns] ||= nil
-        opt_strings = self.sort{|a,b| a[0].to_s <=> b[0].to_s}.collect do |key_val|
-          key = key_val[0]
-          val = key_val[1]
-          key_s = opts[:key_ns] ? "#{opts[:key_ns]}[#{key.to_s}]" : key.to_s
-          if val.kind_of?(::Array)
-            val.sort.collect{|i| "#{key_s}[]=#{::CGI.escape(i.to_s)}"}.join('&')
-          elsif val.respond_to?('to_http_query_str')
-            val.to_http_query_str({
-              :prepend => '',
-              :key_ns => key_s,
-              :append => ''
-            })
-          else
-            "#{key_s}=#{::CGI.escape(val.to_s)}"
-          end
-        end 
-        self.empty? ? '' : "#{opts[:prepend]}#{opt_strings.join('&')}#{opts[:append]}"
-      end
+    def to_http_query_str(opts = {})
+      require 'cgi' unless defined?(::CGI) && defined?(::CGI::escape)
+      opts[:prepend] ||= '?'
+      opts[:append] ||= ''
+      opts[:key_ns] ||= nil
+      opt_strings = self.sort{|a,b| a[0].to_s <=> b[0].to_s}.collect do |key_val|
+        key = key_val[0]
+        val = key_val[1]
+        key_s = opts[:key_ns] ? "#{opts[:key_ns]}[#{key.to_s}]" : key.to_s
+        if val.kind_of?(::Array)
+          val.sort.collect{|i| "#{key_s}[]=#{::CGI.escape(i.to_s)}"}.join('&')
+        elsif val.respond_to?('to_http_query_str')
+          val.to_http_query_str({
+            :prepend => '',
+            :key_ns => key_s,
+            :append => ''
+          })
+        else
+          "#{key_s}=#{::CGI.escape(val.to_s)}"
+        end
+      end 
+      self.empty? ? '' : "#{opts[:prepend]}#{opt_strings.join('&')}#{opts[:append]}"
     end
 
     def to_html_attrs
