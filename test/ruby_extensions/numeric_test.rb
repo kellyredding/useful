@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'useful/ruby_extensions'
 
 class NumericTest < Test::Unit::TestCase
   

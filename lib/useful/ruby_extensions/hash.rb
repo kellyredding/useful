@@ -13,16 +13,18 @@ module Useful::RubyExtensions::Hash
     
     # Return the hash with only keys in *keys
     def only(hash, *keys)
-      hash.delete_if{ |k,v| !keys.flatten.include?(k) }
+      s_keys = keys.flatten.collect{|k| k.to_s}
+      hash.delete_if{ |k,v| !keys.flatten.include?(k) && !s_keys.include?(k) }
       hash
     end
-    
+
     # Return the hash with only keys NOT in *keys
     def except(hash, *keys)
-      hash.delete_if{ |k,v| keys.flatten.include?(k) }
+      s_keys = keys.flatten.collect{|k| k.to_s}
+      hash.delete_if{ |k,v| keys.flatten.include?(k) || s_keys.include?(k) }
       hash
     end
-    
+
     # takes any empty values and makes them nil
     def nillify(hash)
       hash.each do |key,value|
@@ -47,6 +49,7 @@ module Useful::RubyExtensions::Hash
     def except(*keys)
       self.class.except(self.clone, keys)
     end
+    
     def except!(*keys)
       self.class.except(self, keys)
     end
@@ -59,7 +62,8 @@ module Useful::RubyExtensions::Hash
     end
 
     # Returns the value for the provided key(s).  Allows searching in nested hashes
-    def get_value(keys=[])
+    def get_value(*keys_array)
+      keys = keys_array.flatten
       if !keys.respond_to?('empty?') || keys.empty?
         nil
       else
@@ -70,8 +74,8 @@ module Useful::RubyExtensions::Hash
     alias search get_value
 
     # Determines if a value exists for the provided key(s).  Allows searching in nested hashes
-    def check_value?(keys=[])
-      val = self.get_value(keys)
+    def check_value?(*keys_array)
+      val = self.get_value(keys_array)
       val && !val.empty? ? true : false
     end
 
@@ -127,12 +131,5 @@ module Useful::RubyExtensions::Hash
 end
 
 class Hash
-  include Useful::RubyExtensions::Hash
-end
-
-# TODO: verify this in a ruby console
-if defined?(::HashWithIndifferentAccess)
-  class HashWithIndifferentAccess
-    include Useful::RubyExtensions::Hash
-  end
+  include Useful::RubyExtensions::Hash  
 end

@@ -13,4 +13,7 @@ $LOAD_PATH.unshift(lib_path) unless $LOAD_PATH.include?(lib_path)
 require 'useful/active_record_helpers'
 require 'useful/cap_tasks'
 require 'useful/rails_extensions'
+
+require 'activesupport'
+require 'useful/ruby_extensions'
 require 'useful/ruby_extensions_from_rails'
