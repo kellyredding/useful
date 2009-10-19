@@ -107,6 +107,39 @@ class HashTest < Test::Unit::TestCase
       @expected = "class=\"test\" id=\"test_1\""
       assert_equal @expected, {:class => "test", :id => "test_1"}.to_html_attrs
     end
+    
+    should_have_class_methods 'stringify_keys', 'symbolize_keys'
+    should_have_instance_methods 'stringify_keys', 'stringify_keys!', 'symbolize_keys', 'symbolize_keys!'
+
+    context "with string and / or symbol keys" do
+      setup do
+        @sym_hash = {:one => 1, :two => 2, :three => 3}
+        @str_hash = {'one' => 1, 'two' => 2, 'three' => 3}
+      end
+
+      should "should convert all its keys to strings at the class level" do
+        assert_equal @str_hash, Hash.stringify_keys(@sym_hash)
+      end
+      should "should convert all its keys to strings at the instance level" do
+        assert_equal @str_hash, @sym_hash.stringify_keys
+      end
+      should "should destructively convert all keys to strings at the instance level" do
+        @sym_hash.stringify_keys!
+        assert_equal @str_hash, @sym_hash
+      end
+
+      should "should convert all its keys to symbols at the class level" do
+        assert_equal @sym_hash, Hash.symbolize_keys(@str_hash)
+      end
+      should "should convert all its keys to symbols at the instance level" do
+        assert_equal @sym_hash, @str_hash.symbolize_keys
+      end
+      should "should destructively convert all keys to symbols at the instance level" do
+        @str_hash.symbolize_keys!
+        assert_equal @sym_hash, @str_hash
+      end
+
+    end
 
 
   end

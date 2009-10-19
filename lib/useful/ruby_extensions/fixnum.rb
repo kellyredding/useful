@@ -50,9 +50,12 @@ module Useful::RubyExtensions::Fixnum
 
   end
   
+  def self.included(receiver)
+    receiver.send :include, FromActivesupport
+  end
+  
 end
 
 class Fixnum
   include Useful::RubyExtensions::Fixnum
-  include Useful::RubyExtensions::Fixnum::FromActivesupport
 end
