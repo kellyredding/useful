@@ -96,14 +96,6 @@ class StringTest < Test::Unit::TestCase
         assert_equal "Inflections", "Inflections".demodulize
       end
 
-      should_have_class_methods 'classify'
-      should_have_instance_methods 'classify'
-      should "classify both at the class and instance levels" do
-        assert_equal "EggAndHams", String.classify("egg_and_hams")
-        assert_equal "Posts", "posts".classify
-        assert_equal "Business", "business".classify
-      end
-
       should_have_class_methods 'constantize'
       should_have_instance_methods 'constantize'
       should "constantize both at the class and instance levels" do

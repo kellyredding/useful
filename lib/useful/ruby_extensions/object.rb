@@ -14,7 +14,7 @@ module Useful::RubyExtensions::Object
   module FromActivesupport
 
     def blank?
-      self.nil? || (self.respond_to?(:empty?) ? self.empty? : false)
+      self.nil? || self.false? || (self.respond_to?(:empty?) ? self.empty? : false)
     end unless ::Object.new.respond_to?('blank?')
 
     # Returns +value+ after yielding +value+ to the block. This simplifies the

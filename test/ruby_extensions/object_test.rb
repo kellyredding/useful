@@ -24,10 +24,10 @@ class ObjectTest < Test::Unit::TestCase
     should_have_instance_methods 'blank?', 'returning', 'tap'
     
     should "know if it is blank" do
-      [nil,"",[],{}].each do |obj|
+      [nil, false,"",[],{}].each do |obj|
         assert obj.blank?
       end
-      [false, true, "poo", [1], {:one => 1}].each do |obj|
+      [true, "poo", [1], {:one => 1}].each do |obj|
         assert !obj.blank?
       end
     end

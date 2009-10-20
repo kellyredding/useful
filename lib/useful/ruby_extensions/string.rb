@@ -104,20 +104,6 @@ module Useful::RubyExtensions::String
         class_name_in_module.to_s.gsub(/^.*::/, '')
       end unless ::String.respond_to?('demodulize')
 
-      # Create a class name from a string like Rails does for table names to models.
-      # Note that this returns a string and not a Class. (To convert to an actual class
-      # follow +classify+ with +constantize+.)
-      #
-      # Examples:
-      #   "egg_and_hams".classify # => "EggAndHams"
-      #   "posts".classify        # => "Posts"
-      #
-      # Note: this does no de-pluralization
-      def classify(class_str)
-        # strip out any leading schema name
-        camelize(class_str.to_s.sub(/.*\./, ''))
-      end unless ::String.respond_to?('classify')
-
       # Ruby 1.9 introduces an inherit argument for Module#const_get and
       # #const_defined? and changes their default behavior.
       if Module.method(:const_get).arity == 1
@@ -184,10 +170,6 @@ module Useful::RubyExtensions::String
       def demodulize
         self.class.demodulize(self)
       end unless "".respond_to?('demodulize')
-
-      def classify
-        self.class.classify(self)
-      end unless "".respond_to?('classify')
 
       def constantize
         self.class.constantize(self)
