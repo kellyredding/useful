@@ -1,10 +1,9 @@
 module Useful; end
 module Useful::RubyExtensions; end
 
-require 'useful/ruby_extensions_from_rails/object' unless Object.new.respond_to?(:blank?)
-require 'useful/ruby_extensions_from_rails/hash' unless Hash.new.respond_to?(:symbolize_keys!)
+require 'useful/ruby_extensions/object' unless Object.new.respond_to?(:blank?)
+require 'useful/ruby_extensions/hash' unless Hash.new.respond_to?(:symbolize_keys!) && Hash.new.respond_to?(:only)
 require 'useful/ruby_extensions_from_rails/string' unless String.new.respond_to?(:starts_with?)
-require 'useful/ruby_extensions/hash' unless Hash.new.respond_to?(:only)
 
 module Useful::RubyExtensions::Numeric
 

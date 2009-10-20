@@ -129,14 +129,13 @@ module Useful::RubyExtensions::Hash
       def stringify_keys(hash)
         hash.keys.each{ |key| hash[(key.to_s rescue key)] ||= hash.delete(key) }
         hash
-      end
+      end unless ::Hash.respond_to?('stringify_keys')
 
       # inspired by ActiveSupport::CoreExtensions::Hash::Keys (http://api.rubyonrails.org/)
       def symbolize_keys(hash)
         hash.keys.each{ |key| hash[(key.to_sym rescue key)] ||= hash.delete(key) }
         hash
-      end
-
+      end unless ::Hash.respond_to?('symbolize_keys')
       
     end
     
@@ -145,20 +144,20 @@ module Useful::RubyExtensions::Hash
       # Return a new hash with all keys converted to strings.
       def stringify_keys
         self.class.stringify_keys(self.clone)
-      end
+      end unless {}.respond_to?('stringify_keys')
       # Destructively convert all keys to strings. 
       def stringify_keys!
         self.class.stringify_keys(self)
-      end
+      end unless {}.respond_to?('stringify_keys!')
 
       # Return a new hash with all keys converted to strings.
       def symbolize_keys
         self.class.symbolize_keys(self.clone)
-      end
+      end unless {}.respond_to?('symbolize_keys')
       # Destructively convert all keys to strings. 
       def symbolize_keys!
         self.class.symbolize_keys(self)
-      end
+      end unless {}.respond_to?('symbolize_keys!')
 
     end
     
