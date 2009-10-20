@@ -61,6 +61,72 @@ class StringTest < Test::Unit::TestCase
       assert !"2".to_boolean
       assert !"poo".to_boolean
     end
+    
+    context "with activesupport extensions" do
+      
+      should_have_class_methods 'camelize'
+      should_have_instance_methods 'camelize', 'camelcase'
+      should "camelize both at the class and instance levels" do
+        assert_equal "ActiveRecord", String.camelize("active_record")
+        assert_equal "ActiveRecord::Errors", String.camelize("active_record/errors")
+        assert_equal "ActiveRecord", "active_record".camelize
+        assert_equal "activeRecord", "active_record".camelize(:lower)
+        assert_equal "ActiveRecord::Errors", "active_record/errors".camelize
+        assert_equal "activeRecord::Errors", "active_record/errors".camelize(:lower)
+      end
+
+      should_have_class_methods 'underscore'
+      should_have_instance_methods 'underscore'
+      should "underscore both at the class and instance levels" do
+        assert_equal "active_record", String.underscore("ActiveRecord")
+        assert_equal "active_record/errors", "ActiveRecord::Errors".underscore
+      end
+
+      should_have_class_methods 'dasherize'
+      should_have_instance_methods 'dasherize'
+      should "dasherize both at the class and instance levels" do
+        assert_equal "active-record", String.dasherize("active_record")
+        assert_equal "active-record is-awesome", "active_record is_awesome".dasherize
+      end
+
+      should_have_class_methods 'demodulize'
+      should_have_instance_methods 'demodulize'
+      should "demodulize both at the class and instance levels" do
+        assert_equal "Inflections", String.demodulize("ActiveRecord::CoreExtensions::String::Inflections")
+        assert_equal "Inflections", "Inflections".demodulize
+      end
+
+      should_have_class_methods 'classify'
+      should_have_instance_methods 'classify'
+      should "classify both at the class and instance levels" do
+        assert_equal "EggAndHams", String.classify("egg_and_hams")
+        assert_equal "Posts", "posts".classify
+        assert_equal "Business", "business".classify
+      end
+
+      should_have_class_methods 'constantize'
+      should_have_instance_methods 'constantize'
+      should "constantize both at the class and instance levels" do
+        assert_equal String, String.constantize("String")
+        assert_equal Hash, "Hash".constantize
+        assert_equal Useful::RubyExtensions::String, "Useful::RubyExtensions::String".constantize
+      end
+      
+      should_have_instance_methods 'ends_with?', 'starts_with?', 'to_datetime', 'to_date'
+      
+      should "know wheter it starts or ends with something" do
+        assert "poopy pants".starts_with?("poo")
+        assert !"poopy pants".starts_with?("pants")
+        assert "poopy_pants".ends_with?('pants')
+        assert !"poopy pants".ends_with?('poo')
+      end
+      
+      should "be able to convert to dates and times" do
+        assert_equal ::Date.strptime('2009-10-25'), "10/25/2009".to_date
+        assert_equal ::DateTime.strptime('2009-10-25T15:30:00+00:00'), "10/25/2009 3:30 PM".to_datetime
+      end
+
+    end
 
   end
   
