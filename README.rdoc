@@ -3,7 +3,8 @@
 == Description
 
 A collection of useful helpers for various ruby things.  Includes
-helpers for sinatra, ruby base classes, mysql, rails, erb, etc...
+ruby extensions that play nice with activesupport, helpers for
+sinatra/rails/activerecord/erb, etc...
 
 You probably never want them all, all the time, but just require in
 the pieces you are interested in.
@@ -20,8 +21,8 @@ the pieces you are interested in.
 == Usage
 
     require 'rubygems'
+    require 'useful/ruby_extensions'
     require 'useful/sinatra_helpers'
-    require 'useful/mysql_helpers'
 
 == License
 
