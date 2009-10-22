@@ -4,7 +4,7 @@ require 'sinatra/base'
 module Useful; end
 module Useful::SinatraHelpers; end
 
-module Useful::SinatraHelpers::Partials
+module Useful::SinatraHelpers::Erb
   
   # helper to emulate rails' 'render :partial' helper, using erb
   # => taken from the sinatra book, http://sinatra-book.gittr.com/#implemention_of_rails_style_partials
@@ -40,4 +40,10 @@ module Useful::SinatraHelpers::Partials
 
 end
   
-Sinatra::Application.helpers Useful::SinatraHelpers::Partials
+Sinatra::Application.helpers Useful::SinatraHelpers::Erb
+
+require "useful/erb_helpers"
+Sinatra::Application.helpers Useful::ErbHelpers::Forms
+Sinatra::Application.helpers Useful::ErbHelpers::Links
+Sinatra::Application.helpers Useful::ErbHelpers::Tags
+
