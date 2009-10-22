@@ -1,9 +1,10 @@
 require 'erb'
+require 'sinatra/base'
 
 module Useful; end
-module Useful::ErbHelpers; end
+module Useful::SinatraHelpers; end
 
-module Useful::ErbHelpers::Partials
+module Useful::SinatraHelpers::Partials
   
   # helper to emulate rails' 'render :partial' helper, using erb
   # => taken from the sinatra book, http://sinatra-book.gittr.com/#implemention_of_rails_style_partials
@@ -20,14 +21,18 @@ module Useful::ErbHelpers::Partials
     template = File.join(path).to_sym
     raise 'partial collection specified but is nil' if options.has_key?(:collection) && options[:collection].nil?
     if collection = options.delete(:collection)
+      options.delete(:object)  # ignore any object passed in when using :collection
       counter = 0
       collection.inject([]) do |buffer, member|
         counter += 1
-        buffer << erb(template, options.merge(:locals => {object => member, "#{object}_counter".to_sym => counter}))
+        options[:locals] ||= {}
+        options[:locals].merge!({object => member, "#{object}_counter".to_sym => counter})
+        buffer << erb(template, options)
       end.join("\n")
     else
       if member = options.delete(:object)
-        options.merge!(:locals => {object => member})
+        options[:locals] ||= {}
+        options[:locals].merge!({object => member})
       end
       erb(template, options)
     end
@@ -35,3 +40,4 @@ module Useful::ErbHelpers::Partials
 
 end
   
+Sinatra::Application.helpers Useful::SinatraHelpers::Partials

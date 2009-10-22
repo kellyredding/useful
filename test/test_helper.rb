@@ -14,6 +14,7 @@ require 'useful/shoulda_macros/test_unit'
 require 'useful/active_record_helpers'
 require 'useful/cap_tasks'
 require 'useful/rails_helpers'
+require 'useful/sinatra_helpers'
 require 'useful/erb_helpers'
 
 require 'useful/ruby_extensions'
