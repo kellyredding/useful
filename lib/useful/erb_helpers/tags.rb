@@ -1,38 +1,24 @@
-require 'erb'
-
-require 'useful/erb_helpers/common'
-require 'useful/ruby_extensions/hash' unless ::Hash.new.respond_to?(:to_html_attrs)
+require 'useful/ruby_extensions/object' unless ::Object.new.respond_to?('blank?')
+require 'useful/ruby_extensions/hash' unless ::Hash.new.respond_to?('to_html_attrs')
 
 module Useful; end
 module Useful::ErbHelpers; end
 
 module Useful::ErbHelpers::Tags
   
-  include Useful::ErbHelpers::Common
-  
-  def input_tag(type, name, value, options={}, &block)
-    options[:tag] ||= :input
-    options[:type] = type unless type.nil?
-    unless name.nil?
-      options[:name] = name 
-      options[:id] ||= erb_helper_common_safe_id(name)
-    end
-    options[:value] = value unless value.nil?
-    tag(options.delete(:tag), options, &block)
-  end
-
   def clear_tag(options={})
     options[:tag] ||= :div
     options[:style] ||= ''
-    options[:style] = "clear: both;#{options[:style]}"
+    options[:style] = "clear:both;#{" #{options[:style]}" unless options[:style].blank?}"
     tag(options.delete(:tag), options) { '' }
   end
 
-  # helpers to escape tag text content
+  # helpers to escape text for html
   if defined?(::Rack::Utils)
     include ::Rack::Utils
     alias_method :h, :escape_html
-
+  end
+  if defined?('h')
     # escape tag text content and format for text-like display
     def h_text(text, opts={})
       h(text.to_s).
@@ -48,7 +34,7 @@ module Useful::ErbHelpers::Tags
   # EX : tag(:h1, :title => "shizam") { "shizam" }
   # => <h1 title="shizam">shizam</h1>
   def tag(name, options={})
-    "<#{name.to_s} #{options.to_html_attrs} #{block_given? ? ">#{yield}</#{name}" : "/"}>"
+    "<#{name.to_s}#{" #{options.to_html_attrs}" unless options.empty?}#{block_given? ? ">#{yield}</#{name}" : " /"}>"
   end
   
 end      

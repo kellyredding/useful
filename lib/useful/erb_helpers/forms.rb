@@ -1,5 +1,3 @@
-require 'erb'
-
 require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
 
@@ -38,6 +36,17 @@ module Useful::ErbHelpers::Forms
     tag(:label, options) { value }
   end
   
+  def input_tag(type, name, value, options={}, &block)
+    options[:tag] ||= :input
+    options[:type] = type unless type.nil?
+    unless name.nil?
+      options[:name] = name 
+      options[:id] ||= erb_helper_common_safe_id(name)
+    end
+    options[:value] = value unless value.nil?
+    tag(options.delete(:tag), options, &block)
+  end
+
   def hidden_field_tag(name, value=nil, options={}) 
     input_tag('hidden', name, value, options)
   end

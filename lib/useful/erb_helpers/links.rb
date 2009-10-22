@@ -1,5 +1,3 @@
-require 'erb'
-
 require 'useful/erb_helpers/tags'
 
 module Useful; end
