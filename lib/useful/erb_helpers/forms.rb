@@ -133,4 +133,8 @@ module Useful::ErbHelpers::Forms
     input_tag('image', nil, nil, options)
   end
   
+  def self.included(receiver)
+    receiver.send :include, Useful::ErbHelpers::Tags
+  end
+  
 end
