@@ -27,10 +27,25 @@ class FormsTest < Test::Unit::TestCase
       end
       should "render with a block passed" do
         @form_opts[:method] = 'post'
-        assert_equal tag(:form, @form_opts) { "some form content here"}, form_tag(@url) { "some form content here"}
+        content = "some content here"
+        assert_equal tag(:form, @form_opts) { content }, form_tag(@url) { content }
       end
     end
 
+    context "'field_set_tag'" do
+      should "render with no legend" do
+        assert_equal tag(:fieldset) { '' }, field_set_tag
+      end
+      should "render with a legend" do
+        legend_text = "Good Times"
+        assert_equal tag(:fieldset) { tag(:legend) { legend_text.to_s } }, field_set_tag(legend_text)
+      end
+      should "render with a block passed" do
+        content = "some content here"
+        assert_equal tag(:fieldset) { content }, field_set_tag { content }
+      end
+    end
+    
   end
 
 end
