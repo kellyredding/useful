@@ -46,6 +46,21 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
+    context "'label_tag'" do
+      should "render with value implied from the name" do
+        name = "user"
+        assert_equal tag(:label, :for => name) { "User" }, label_tag(name)
+      end
+      should "render with value implied from an ugly name" do
+        name = "user[name]"
+        assert_equal tag(:label, :for => name) { "User name" }, label_tag(name)
+      end
+      should "render with explicit value" do
+        name = "user"
+        assert_equal tag(:label, :for => name) { "Current User" }, label_tag(name, "Current User")
+      end
+    end
+    
   end
 
 end

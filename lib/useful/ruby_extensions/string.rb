@@ -72,6 +72,28 @@ module Useful::RubyExtensions::String
         end
       end unless ::String.respond_to?('camelize')
 
+      # Capitalizes the first word and turns underscores into spaces and strips a
+      # trailing "_id", if any. Like +titleize+, this is meant for creating pretty output.
+      #
+      # Examples:
+      #   "employee_salary" # => "Employee salary"
+      #   "author_id"       # => "Author"
+      def humanize(lower_case_and_underscored_word)
+        result = lower_case_and_underscored_word.to_s.dup
+        result.gsub(/_id$/, "").gsub(/_/, " ").capitalize
+      end
+
+      # Capitalizes all the words and replaces some characters in the string to create
+      # a nicer looking title. +titleize+ is meant for creating pretty output. It is not
+      # used in the Rails internals.
+      #
+      # Examples:
+      #   "man from the boondocks".titleize # => "Man From The Boondocks"
+      #   "x-men: the last stand".titleize  # => "X Men: The Last Stand"
+      def titleize(word)
+        humanize(underscore(word)).gsub(/\b('?[a-z])/) { $1.capitalize }
+      end
+
       # The reverse of +camelize+. Makes an underscored, lowercase form from the expression in the string.
       #
       # Changes '::' to '/' to convert namespaces to paths.
@@ -158,6 +180,14 @@ module Useful::RubyExtensions::String
         end
       end unless "".respond_to?('camelize')
       alias_method :camelcase, :camelize unless "".respond_to?('camelcase')
+
+      def humanize
+        self.class.humanize(self)
+      end unless "".respond_to?('humanize')
+
+      def titleize
+        self.class.titleize(self)
+      end unless "".respond_to?('titleize')
 
       def underscore
         self.class.underscore(self)

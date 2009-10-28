@@ -75,6 +75,24 @@ class StringTest < Test::Unit::TestCase
         assert_equal "activeRecord::Errors", "active_record/errors".camelize(:lower)
       end
 
+      should_have_class_methods 'humanize'
+      should_have_instance_methods 'humanize'
+      should "humanize both at the class and instance levels" do
+        assert_equal "Employee salary", String.humanize("employee_salary")
+        assert_equal "Author", String.humanize("author_id")
+        assert_equal "Employee salary", "employee_salary".humanize
+        assert_equal "Author", "author_id".humanize
+      end
+
+      should_have_class_methods 'titleize'
+      should_have_instance_methods 'titleize'
+      should "titleize both at the class and instance levels" do
+        assert_equal "Man From The Boondocks", String.titleize("man from the boondocks")
+        assert_equal "X Men: The Last Stand", String.titleize("x-men: the last stand")
+        assert_equal "Man From The Boondocks", "man from the boondocks".titleize
+        assert_equal "X Men: The Last Stand", "x-men: the last stand".titleize
+      end
+
       should_have_class_methods 'underscore'
       should_have_instance_methods 'underscore'
       should "underscore both at the class and instance levels" do

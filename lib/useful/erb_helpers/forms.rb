@@ -1,5 +1,6 @@
 require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
+require 'useful/ruby_extensions/string' unless ::String.new.respond_to?('humanize')
 
 module Useful; end
 module Useful::ErbHelpers; end
@@ -33,7 +34,7 @@ module Useful::ErbHelpers::Forms
   end
   
   def label_tag(name, value=nil, options={})
-    value ||= name.to_s.capitalize
+    value ||= name.to_s.gsub(/\[/, '_').gsub(/\]/, '').humanize
     options.update :for => name.to_s
     tag(:label, options) { value }
   end
