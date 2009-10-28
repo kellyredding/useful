@@ -99,7 +99,6 @@ module Useful::ErbHelpers::Links
     srcs, options = handle_srcs_options(args)
     options[:type] ||= "text/javascript"
     Array(srcs).collect do |src|
-      #options[:src] = "/javascripts/#{src}.js#{"?#{Time.now.to_i}" if Sinatra::Application.environment.to_s == 'development'}"
       #TODO: write sinatra helper to auto set env with Sinatra::Application.environment.to_s
       options[:src] = build_src_href(src, :default_path => "javascripts", :extension => ".js", :environment => options.delete(:environment))
       tag(:script, options) { '' }

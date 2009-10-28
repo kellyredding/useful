@@ -116,7 +116,7 @@ module Useful::RubyExtensions::Hash
     end
 
     def to_html_attrs
-      self.empty? ? '' : self.collect{|key, val| "#{key}=\"#{val}\""}.join(' ')
+      self.empty? ? '' : self.sort{|a,b| a[0].to_s <=> b[0].to_s}.collect{|k_v| "#{k_v[0]}=\"#{k_v[1]}\""}.join(' ')
     end
 
   end

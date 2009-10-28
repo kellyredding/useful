@@ -15,6 +15,7 @@ module Useful::ErbHelpers::Forms
       options[:enctype] = OPTIONS[:multipart]
     end
     if block_given?
+      @_out_buf ||= ''
       @_out_buf << tag(:form, options) { erb_helper_common_capture(&block) }
     else
       tag(:form, options)
@@ -24,6 +25,7 @@ module Useful::ErbHelpers::Forms
   def field_set_tag(legend=nil, options={}, &block)
     legend_html = legend.nil? ? '' : tag(:legend) { legend.to_s }
     if block_given?
+      @_out_buf ||= ''
       @_out_buf << tag(:fieldset, options) { legend_html + erb_helper_common_capture(&block) }
     else
       tag(:fieldset, options) { legend_html }
@@ -104,6 +106,7 @@ module Useful::ErbHelpers::Forms
     options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
     options[:tag] = 'select'
     if block_given?
+      @_out_buf ||= ''
       @_out_buf << input_tag(:select, html_name, nil, options) { erb_helper_common_capture(&block) }
     else
       input_tag(:select, html_name, nil, options)

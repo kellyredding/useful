@@ -145,7 +145,7 @@ class LinksTest < Test::Unit::TestCase
       should "render a development environment source" do
         assert_match @def_dev_match, javascript_include_tag('default', :environment => 'development')
       end
-      context "with two stylsheets" do
+      context "with two sources" do
         setup do
           @tags = []
           @opts[:src] = @def[1]
@@ -153,14 +153,14 @@ class LinksTest < Test::Unit::TestCase
           @opts[:src] = @test[1]
           @tags << tag(:script, @opts) { '' }
         end
-        should "render if sheets passed as args" do
+        should "render if sources passed as args" do
           assert_equal @tags.join("\n"), javascript_include_tag(@def[0], @test[0])
         end
-        should "render if sheets passed as an array" do
+        should "render if sources passed as an array" do
           assert_equal @tags.join("\n"), javascript_include_tag([@def[0], @test[0]])
         end
       end
-      context "with three stylsheets referenced differently" do
+      context "with three sources referenced differently" do
         setup do
           @other = ['/other_javascripts/other', "/other_javascripts/other.js"]
           @another = ['/other_javascripts/another.js', "/other_javascripts/another.js"]
@@ -172,7 +172,7 @@ class LinksTest < Test::Unit::TestCase
           @opts[:src] = @another[1]
           @tags << tag(:script, @opts) { '' }
         end
-        should "render if sheets passed as args" do
+        should "render if sources passed as args" do
           assert_equal @tags.join("\n"), javascript_include_tag(@def[0], @other[0], @another[0])
         end
       end
