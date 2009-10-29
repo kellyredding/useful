@@ -78,12 +78,10 @@ module Useful::ErbHelpers::Forms
   # => :confirm - string
   #   => will add js confirm confirmation before submitting
   def submit_tag(value="Save changes", options={})
-    unless (disabled_with = options.delete(:disabled_with)).blank?
-      options[:onclick] = erb_helper_disable_with_javascript(disabled_with)
-    end
-    unless (confirm = options.delete(:confirm)).blank?
+    options[:onclick] = erb_helper_disable_with_javascript(options.delete(:disabled_with)) if options.has_key?(:disabled_with)
+    if options.has_key?(:confirm)
       options[:onclick] ||= 'return true;'
-      options[:onclick] = "if (!#{erb_helper_confirm_javascript(confirm)}) return false; #{options[:onclick]}"
+      options[:onclick] = "if (!#{erb_helper_confirm_javascript(options.delete(:confirm))}) return false; #{options[:onclick]}"
     end
     input_tag('submit', 'commit', value, options)
   end

@@ -63,8 +63,8 @@ module Useful::ErbHelpers::Common
     "\n"    => '\n',
     "\r"    => '\n',
     '"'     => '\\"',
-    "'"     => "\\'" }
-
+    "'"     => "\\'"
+  }.freeze
   # Escape carrier returns and single and double quotes for JavaScript segments.
   def escape_javascript(javascript)
     if javascript
