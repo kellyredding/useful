@@ -53,11 +53,43 @@ class FormsTest < Test::Unit::TestCase
       end
       should "render with value implied from an ugly name" do
         name = "user[name]"
-        assert_equal tag(:label, :for => name) { "User name" }, label_tag(name)
+        assert_equal tag(:label, :for => erb_helper_common_safe_id(name)) { "User name" }, label_tag(name)
+      end
+      should "render with explicit value and for an explicit id" do
+        name = "user"
+        id = "current_user"
+        assert_equal tag(:label, :for => id) { "Current User" }, label_tag(name, "Current User", :for => id)
+      end
+    end
+    
+    context "'input_tag'" do
+      setup do
+        @opts = {
+          :type => 'text',
+          :name => 'user',
+          :id => 'user'
+        }
+      end
+      should "render with type, name, and default tag" do
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
+      end
+      should "render with custom tag" do
+        @opts.delete(:type)
+        tag = 'textarea'
+        assert_equal tag(tag, @opts), input_tag(nil, @opts[:name], nil, :tag => tag)
+      end
+      should "render with value implied from an ugly name" do
+        @opts[:name] = 'user[name]'
+        @opts[:id] = 'user_name'
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
       end
       should "render with explicit value" do
-        name = "user"
-        assert_equal tag(:label, :for => name) { "Current User" }, label_tag(name, "Current User")
+        @opts[:value] = "some awesome text"
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value])
+      end
+      should "render with a block passed" do
+        content = "some content here"
+        assert_equal tag(:input, @opts) { content }, input_tag(@opts[:type], @opts[:name]) { content }
       end
     end
     

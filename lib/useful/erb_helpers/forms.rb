@@ -33,13 +33,7 @@ module Useful::ErbHelpers::Forms
     end
   end
   
-  def label_tag(name, value=nil, options={})
-    value ||= name.to_s.gsub(/\[/, '_').gsub(/\]/, '').humanize
-    options.update :for => name.to_s
-    tag(:label, options) { value }
-  end
-  
-  def input_tag(type, name, value, options={}, &block)
+  def input_tag(type, name, value=nil, options={}, &block)
     options[:tag] ||= :input
     options[:type] = type unless type.nil?
     unless name.nil?
@@ -47,9 +41,20 @@ module Useful::ErbHelpers::Forms
       options[:id] ||= erb_helper_common_safe_id(name)
     end
     options[:value] = value unless value.nil?
-    tag(options.delete(:tag), options, &block)
+    if block_given?
+      @_out_buf ||= ''
+      @_out_buf << tag(options.delete(:tag), options) { erb_helper_common_capture(&block) }
+    else
+      tag(options.delete(:tag), options)
+    end
   end
 
+  def label_tag(name, value=nil, options={})
+    value ||= name.to_s.gsub(/\[/, '_').gsub(/\]/, '').humanize
+    options[:for] ||= erb_helper_common_safe_id(name)
+    tag(:label, options) { value }
+  end
+  
   def hidden_field_tag(name, value=nil, options={}) 
     input_tag('hidden', name, value, options)
   end
