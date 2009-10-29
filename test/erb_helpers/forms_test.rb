@@ -114,6 +114,23 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
+    context "'text_field_tag'" do
+      setup do
+        @name = 'user'
+        @value = 'bob'
+      end
+      should "render with just a name" do
+        assert_equal input_tag('text', @name), text_field_tag(@name)
+      end
+      should "render with just a name and value" do
+        assert_equal input_tag('text', @name, @value), text_field_tag(@name, @value)
+      end
+      should "render with a name and value and options" do
+        opts = { :class => 'awesome' }
+        assert_equal input_tag('text', @name, @value, opts), text_field_tag(@name, @value, opts)
+      end
+    end
+    
     context "'password_field_tag'" do
       setup do
         @name = 'user'

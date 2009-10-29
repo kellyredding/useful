@@ -60,6 +60,10 @@ module Useful::ErbHelpers::Forms
     input_tag('hidden', name, value, options)
   end
   
+  def text_field_tag(name, value=nil, options={}) 
+    input_tag('text', name, value, options)
+  end
+  
   def password_field_tag(name="password", value=nil, options={}) 
     input_tag('password', name, value, options)
   end
@@ -68,6 +72,33 @@ module Useful::ErbHelpers::Forms
     input_tag('file', name, nil, options)
   end
   
+  def submit_tag(value="Save", options={}) 
+    input_tag('submit', 'commit', value, options)
+  end
+  
+  def image_submit_tag(source, options={})
+    options[:src] = source
+    options[:alt] ||= 'Save'
+    input_tag('image', nil, nil, options)
+  end
+  
+  def text_area_tag(name, content=nil, options={}) 
+    options[:tag] = 'textarea'
+    input_tag(nil, name, nil, options) { content || '' }
+  end
+  
+  def select_tag(name, options={}, &block) 
+    html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
+    options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
+    options[:tag] = 'select'
+    if block_given?
+      @_out_buf ||= ''
+      @_out_buf << input_tag(:select, html_name, nil, options) { erb_helper_common_capture(&block) }
+    else
+      input_tag(:select, html_name, nil, options)
+    end
+  end
+
  def check_box_tag(name, label=nil, value='1', checked=false, options={})
     tag_name = options.delete(:tag) || :div
     if options.has_key?(:class)
@@ -101,37 +132,6 @@ module Useful::ErbHelpers::Forms
     else
       label_tag(options[:id], input_str + tag(tag_name) { label }, :class => options.delete(:class))
     end
-  end
-  
-  def select_tag(name, options={}, &block) 
-    html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
-    options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
-    options[:tag] = 'select'
-    if block_given?
-      @_out_buf ||= ''
-      @_out_buf << input_tag(:select, html_name, nil, options) { erb_helper_common_capture(&block) }
-    else
-      input_tag(:select, html_name, nil, options)
-    end
-  end
-
-  def text_area_tag(name, content=nil, options={}) 
-    options[:tag] = 'textarea'
-    input_tag(nil, name, nil, options) { content || '' }
-  end
-  
-  def text_field_tag(name, value=nil, options={}) 
-    input_tag('text', name, value, options)
-  end
-  
-  def submit_tag(value="Save", options={}) 
-    input_tag('submit', 'commit', value, options)
-  end
-  
-  def image_submit_tag(source, options={})
-    options[:src] = source
-    options[:alt] ||= 'Save'
-    input_tag('image', nil, nil, options)
   end
   
   def self.included(receiver)
