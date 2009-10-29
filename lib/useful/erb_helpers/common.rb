@@ -18,7 +18,7 @@ module Useful::ErbHelpers::Common
   protected
   
   def erb_helper_common_safe_id(id)
-    id.gsub(/\[/, '_').gsub(/\]/, '').gsub(/\W/,'')
+    id.gsub(/\[\]/, '').gsub(/\[/, '_').gsub(/\]/, '').gsub(/\W/,'')
   end
   
   def erb_helper_common_capture(*args, &block)

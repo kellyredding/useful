@@ -1,6 +1,7 @@
 require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
-require 'useful/ruby_extensions/string' unless ::String.new.respond_to?('humanize')
+require 'useful/ruby_extensions/string' unless ::String.new.respond_to?('humanize') && ::String.new.respond_to?('ends_with?')
+require 'useful/ruby_extensions/object' unless ::Object.new.respond_to?('true?')
 
 module Useful; end
 module Useful::ErbHelpers; end
@@ -115,16 +116,15 @@ module Useful::ErbHelpers::Forms
     input_tag(nil, name, nil, options) { content || '' }
   end
   
+  # This one's a little different than the corresponding active support version:
+  # => ie. you don't pass an options string as the 2nd argument
+  # => you, instead, pass a block that should return the desired options string
+  # => ie, select_tag('user') { '<option>test</option>' }
   def select_tag(name, options={}, &block) 
-    html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
+    html_name = (options[:multiple].true? && !name.to_s.ends_with?("[]")) ? "#{name}[]" : name
     options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
     options[:tag] = 'select'
-    if block_given?
-      @_out_buf ||= ''
-      @_out_buf << input_tag(:select, html_name, nil, options) { erb_helper_common_capture(&block) }
-    else
-      input_tag(:select, html_name, nil, options)
-    end
+    input_tag(nil, html_name, nil, options, &block)
   end
 
  def check_box_tag(name, label=nil, value='1', checked=false, options={})
