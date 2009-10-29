@@ -151,6 +151,19 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
+    context "'file_field_tag'" do
+      setup do
+        @name = 'resume'
+      end
+      should "render with just a name" do
+        assert_equal input_tag('file', @name), file_field_tag(@name)
+      end
+      should "render with a name and options" do
+        opts = { :class => 'awesome' }
+        assert_equal input_tag('file', @name, nil, opts), file_field_tag(@name, opts)
+      end
+    end
+    
   end
 
 end
