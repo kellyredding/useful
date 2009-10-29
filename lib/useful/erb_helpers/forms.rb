@@ -77,7 +77,7 @@ module Useful::ErbHelpers::Forms
   #   => will add js onclick event to first disable submit, setting text to value, and then submitting form
   # => :confirm - string
   #   => will add js confirm confirmation before submitting
-  def submit_tag(value="Save changes", options={})
+  def submit_tag(value=OPTIONS[:default_submit_value], options={})
     options[:onclick] = erb_helper_disable_with_javascript(options.delete(:disabled_with)) if options.has_key?(:disabled_with)
     if options.has_key?(:confirm)
       options[:onclick] ||= 'return true;'
@@ -86,9 +86,16 @@ module Useful::ErbHelpers::Forms
     input_tag('submit', 'commit', value, options)
   end
   
+  # Special options:
+  # => :confirm - string
+  #   => will add js confirm confirmation before submitting
   def image_submit_tag(source, options={})
-    options[:src] = source
-    options[:alt] ||= 'Save'
+    options[:src] = ['/'].include?(source[0..0]) ? source : "/images/#{source}"
+    options[:alt] ||= OPTIONS[:default_submit_value]
+    if options.has_key?(:confirm)
+      options[:onclick] ||= 'return true;'
+      options[:onclick] = "if (!#{erb_helper_confirm_javascript(options.delete(:confirm))}) return false; #{options[:onclick]}"
+    end
     input_tag('image', nil, nil, options)
   end
   

@@ -7,7 +7,8 @@ module Useful::ErbHelpers::Common
     :disabled => 'disabled',
     :checked => 'checked',
     :multiple => 'multiple',
-    :multipart => 'multipart/form-data'
+    :multipart => 'multipart/form-data',
+    :default_submit_value => "Save changes"
   }.freeze
   
   protected

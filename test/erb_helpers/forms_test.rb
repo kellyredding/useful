@@ -166,7 +166,7 @@ class FormsTest < Test::Unit::TestCase
     
     context "'submit_tag'" do
       should "render with no args" do
-        assert_equal input_tag('submit', 'commit', "Save changes"), submit_tag
+        assert_equal input_tag('submit', 'commit', Useful::ErbHelpers::Common::OPTIONS[:default_submit_value]), submit_tag
       end
       should "render with just a value" do
         val = "Edit this article"
@@ -181,6 +181,27 @@ class FormsTest < Test::Unit::TestCase
         val = "Edit"
         confirm = "Sure?"
         assert_equal input_tag('submit', 'commit', val, :onclick => "if (!#{erb_helper_confirm_javascript(confirm)}) return false; return true;"), submit_tag(val, :confirm => confirm)
+      end
+    end
+    
+    context "'image_submit_tag'" do
+      setup do
+        @opts = {:class => 'awesome', :alt => Useful::ErbHelpers::Common::OPTIONS[:default_submit_value]}
+        @img_name = "charles.jpg"
+        @img_def_src = "/images/#{@img_name}"
+        @img_cust_src = "/in_charge/#{@img_name}"
+      end
+      should "render without an image path" do
+        opts = {:src => @img_def_src, :alt => Useful::ErbHelpers::Common::OPTIONS[:default_submit_value]}
+        assert_equal input_tag('image', nil, nil, opts), image_submit_tag(@img_name)
+      end
+      should "render with an image path" do
+        assert_equal input_tag('image', nil, nil, @opts.merge(:src => @img_cust_src)), image_submit_tag(@img_cust_src, @opts)
+      end
+      should "render confirmed" do
+        confirm = "Sure?"
+        opts = {:src => @img_def_src, :onclick => "if (!#{erb_helper_confirm_javascript(confirm)}) return false; return true;", :alt => Useful::ErbHelpers::Common::OPTIONS[:default_submit_value]}
+        assert_equal input_tag('image', nil, nil, opts), image_submit_tag(@img_name, :confirm => confirm)
       end
     end
     

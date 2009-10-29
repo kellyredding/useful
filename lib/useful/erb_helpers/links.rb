@@ -64,8 +64,8 @@ module Useful::ErbHelpers::Links
   #  => <img src="/images/logo.jpg" />
   # EX : image_tag '/better/logo.jpg'
   #  => <img src="/better/logo.jpg" />
-  def image_tag(src,options={})
-    options[:src] = ['/'].include?(src[0..0]) ? src : "/images/#{src}"
+  def image_tag(source,options={})
+    options[:src] = ['/'].include?(source[0..0]) ? source : "/images/#{source}"
     tag(:img, options)
   end
 
