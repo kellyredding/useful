@@ -21,13 +21,23 @@ class LinksTest < Test::Unit::TestCase
       should "render with html options" do
         assert_equal tag(:a, @link_options.merge(:href => @link_href)) { @link_content }, link_to(@link_content, @link_href, @link_options)
       end
-    end
-
-    context "'open_link_to'" do
-      should "render" do
-        link_tag = link_to(@link_content, @link_href, @link_options.merge(:onclick => "javascript: window.open('#{@link_href}'); return false;"))
-        assert_equal link_tag, open_link_to(@link_content, @link_href, @link_options)
+      should "render with popup" do
+        [true, ['new_window_name', 'height=300,width=600']].each do |pop_opts|
+          onclick = "javascript: #{erb_helper_popup_javascript(pop_opts)} return false;"
+          assert_equal tag(:a, :href => @link_href, :onclick => onclick) { @link_href }, link_to(@link_href, :popup => pop_opts)
+        end
       end
+      should "render with confirm" do
+        confirm = "Are you sure?"
+        onclick = "javascript: return #{erb_helper_confirm_javascript(confirm)};"
+        assert_equal tag(:a, :href => @link_href, :onclick => onclick) { @link_href }, link_to(@link_href, :confirm => confirm)
+      end
+      should "render with confirm and popup" do
+        confirm = "Are you sure?"
+        pop_opts = true
+        onclick = "javascript: if (#{erb_helper_confirm_javascript(confirm)}) { #{erb_helper_popup_javascript(pop_opts)} }; return false;"
+        assert_equal tag(:a, :href => @link_href, :onclick => onclick) { @link_href }, link_to(@link_href, :confirm => confirm, :popup => pop_opts)
+      end      
     end
 
     context "'mail_link_to'" do

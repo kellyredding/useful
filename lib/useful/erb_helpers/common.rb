@@ -29,15 +29,15 @@ module Useful::ErbHelpers::Common
   end
   
   def erb_helper_convert_options_to_javascript!(options)
-    confirm, popup = options.delete(:confirm), html_options.delete(:popup)
+    confirm, popup = options.delete(:confirm), options.delete(:popup)
     if confirm || popup
       options[:onclick] = case
         when confirm && popup
           "javascript: if (#{erb_helper_confirm_javascript(confirm)}) { #{erb_helper_popup_javascript(popup)} }; return false;"
         when confirm
-          "javascript: return #{confirm_javascript_function(confirm)};"
+          "javascript: return #{erb_helper_confirm_javascript(confirm)};"
         when popup
-          "javascript: #{popup_javascript_function(popup)} return false;"
+          "javascript: #{erb_helper_popup_javascript(popup)} return false;"
         else
           "javascript: return false;" # should never case to this b/c of if statement
       end

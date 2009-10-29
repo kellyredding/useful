@@ -1,9 +1,12 @@
+require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
 
 module Useful; end
 module Useful::ErbHelpers; end
 
 module Useful::ErbHelpers::Links
+  
+  include Useful::ErbHelpers::Common
   
   # helper to emulate action view's 'link_to'
   # EX : link_to "http://google.com"
@@ -12,19 +15,21 @@ module Useful::ErbHelpers::Links
   # => <a href="http://google.com">google</a>
   # EX : link_to "google", "http://google.com", :class => "awesome"
   # => <a href="http://google.com" class="awesome">google</a>
+  # EX : link_to "http://google.com", :popup => true
+  # => <a href="http://google.com" onclick="javascript: window.open(this.href); return false;">http://google.com</a>
+  # EX : link_to "http://google.com", :popup => ['new_window_name', 'height=300,width=600']
+  # => <a href="http://google.com" onclick="javascript: window.open(this.href,'new_window_name','height=300,width=600'); return false;">http://google.com</a>
+  # EX : link_to "http://google.com", :confirm => "Are you sure?"
+  # => <a href="http://google.com" onclick="javascript: return confirm('Are you sure?');">http://google.com</a>
+  # EX : link_to "http://google.com", :confirm => "Are you sure?", :popup => true
+  # => <a href="http://google.com" onclick="javascript: if (confirm('Are you sure?')) { window.open(this.href); }; return false;">http://google.com</a>
   def link_to(*args)
     content, href, options = link_content_href_opts(args)
     options.update :href => href
+    erb_helper_convert_options_to_javascript!(options)
     tag(:a, options) { content }
   end
   
-  # same as 'link_to', but preffering js open in a new window
-  def open_link_to(*args)
-    content, href, options = link_content_href_opts(args)
-    options[:onclick] = "javascript: window.open('#{href}'); return false;"
-    link_to(content, href, options)
-  end
-
   # helper for generating a mailto:
   # EX : mail_link_to "test@example.com"
   # => <a href="mailto:test@example.com">test@example.com</a>
