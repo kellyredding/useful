@@ -72,7 +72,19 @@ module Useful::ErbHelpers::Forms
     input_tag('file', name, nil, options)
   end
   
-  def submit_tag(value="Save", options={}) 
+  # Special options:
+  # => :disable_with - string
+  #   => will add js onclick event to first disable submit, setting text to value, and then submitting form
+  # => :confirm - string
+  #   => will add js confirm confirmation before submitting
+  def submit_tag(value="Save changes", options={})
+    unless (disabled_with = options.delete(:disabled_with)).blank?
+      options[:onclick] = erb_helper_disable_with_javascript(disabled_with)
+    end
+    unless (confirm = options.delete(:confirm)).blank?
+      options[:onclick] ||= 'return true;'
+      options[:onclick] = "if (!#{erb_helper_confirm_javascript(confirm)}) return false; #{options[:onclick]}"
+    end
     input_tag('submit', 'commit', value, options)
   end
   

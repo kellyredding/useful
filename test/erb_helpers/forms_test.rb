@@ -164,6 +164,26 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
+    context "'submit_tag'" do
+      should "render with no args" do
+        assert_equal input_tag('submit', 'commit', "Save changes"), submit_tag
+      end
+      should "render with just a value" do
+        val = "Edit this article"
+        assert_equal input_tag('submit', 'commit', val), submit_tag(val)
+      end
+      should "render disabled with" do
+        val = "Edit"
+        dis_with = "Saving..."
+        assert_equal input_tag('submit', 'commit', val, :onclick => erb_helper_disable_with_javascript(dis_with)), submit_tag(val, :disabled_with => dis_with)
+      end
+      should "render confirmed" do
+        val = "Edit"
+        confirm = "Sure?"
+        assert_equal input_tag('submit', 'commit', val, :onclick => "if (!#{erb_helper_confirm_javascript(confirm)}) return false; return true;"), submit_tag(val, :confirm => confirm)
+      end
+    end
+    
   end
 
 end
