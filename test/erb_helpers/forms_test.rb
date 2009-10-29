@@ -46,22 +46,6 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
-    context "'label_tag'" do
-      should "render with value implied from the name" do
-        name = "user"
-        assert_equal tag(:label, :for => name) { "User" }, label_tag(name)
-      end
-      should "render with value implied from an ugly name" do
-        name = "user[name]"
-        assert_equal tag(:label, :for => erb_helper_common_safe_id(name)) { "User name" }, label_tag(name)
-      end
-      should "render with explicit value and for an explicit id" do
-        name = "user"
-        id = "current_user"
-        assert_equal tag(:label, :for => id) { "Current User" }, label_tag(name, "Current User", :for => id)
-      end
-    end
-    
     context "'input_tag'" do
       setup do
         @opts = {
@@ -90,6 +74,39 @@ class FormsTest < Test::Unit::TestCase
       should "render with a block passed" do
         content = "some content here"
         assert_equal tag(:input, @opts) { content }, input_tag(@opts[:type], @opts[:name]) { content }
+      end
+    end
+    
+    context "'label_tag'" do
+      should "render with value implied from the name" do
+        name = "user"
+        assert_equal tag(:label, :for => name) { "User" }, label_tag(name)
+      end
+      should "render with value implied from an ugly name" do
+        name = "user[name]"
+        assert_equal tag(:label, :for => erb_helper_common_safe_id(name)) { "User name" }, label_tag(name)
+      end
+      should "render with explicit value and for an explicit id" do
+        name = "user"
+        id = "current_user"
+        assert_equal tag(:label, :for => id) { "Current User" }, label_tag(name, "Current User", :for => id)
+      end
+    end
+    
+    context "'hidden_field_tag'" do
+      setup do
+        @name = 'user'
+        @value = 'bob'
+      end
+      should "render with just a name" do
+        assert_equal input_tag('hidden', @name), hidden_field_tag(@name)
+      end
+      should "render with just a name and value" do
+        assert_equal input_tag('hidden', @name, @value), hidden_field_tag(@name, @value)
+      end
+      should "render with a name and value and options" do
+        opts = { :class => 'awesome' }
+        assert_equal input_tag('hidden', @name, @value, opts), hidden_field_tag(@name, @value, opts)
       end
     end
     
