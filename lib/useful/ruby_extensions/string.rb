@@ -11,6 +11,15 @@ module Useful::RubyExtensions::String
       string
     end
     
+    # does some CGI escaping on a string
+    CGI_ESCAPE_MAP = {
+      '+'    => '%20'
+    }.freeze
+    def cgi_escape(string)
+      require 'cgi' unless defined?(::CGI) && defined?(::CGI::escape)
+      ::CGI.escape(string).gsub(/(\+)/) { CGI_ESCAPE_MAP[$1] }
+    end
+    
     def match?(string, pattern)
       !string.match(pattern).nil?
     end
@@ -35,6 +44,19 @@ module Useful::RubyExtensions::String
     def hsub!(hash)
       self.class.hsub(self, hash)
     end
+    
+    # will destructively empty out a string, making its value ""
+    def empty!
+      self.replace("")
+    end
+
+    def cgi_escape
+      self.class.cgi_escape(self)
+    end
+
+    def cgi_escape!
+      self.replace(self.class.cgi_escape(self))
+    end
 
     def match?(pattern)
       self.class.match?(self, pattern)
@@ -43,11 +65,11 @@ module Useful::RubyExtensions::String
     def show_regexp(re)
       self.class.show_regexp(self, re)
     end
-
+    
     def to_boolean
       self =~ /^(true|1)$/i ? true : false
     end
-
+    
   end
   
   module FromActivesupport

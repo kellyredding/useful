@@ -25,6 +25,38 @@ class StringTest < Test::Unit::TestCase
       end
     end
     
+    should_have_instance_methods 'empty!'
+    should "support destructive emptying at the instance level" do
+      s = "test"
+      s.empty!
+      assert_equal "", s
+    end
+    
+    context "with content needing CGI escaping" do
+      setup do
+        @content = "escape\\this&string45%"
+        @escaped_content = "escape%5Cthis%26string45%25"
+      end
+      
+      should_have_class_methods 'cgi_escape'
+      should_have_instance_methods 'cgi_escape', 'cgi_escape!'
+      should "support cgi escaping at the class level" do
+        assert_equal @escaped_content, String.cgi_escape(@content)
+      end
+      should "support cgi escaping at the instance level" do
+        assert_equal @escaped_content, @content.cgi_escape
+      end
+      should "support destructive cgi escaping at the instance level" do
+        @content.cgi_escape!
+        assert_equal @escaped_content, @content
+      end
+      should "escape the ' ' char as %20" do
+        @content << ' 1'
+        @escaped_content << "%201"
+        assert_equal @escaped_content, String.cgi_escape(@content)
+      end
+    end
+    
     context "with a regular expression" do
       setup do
         @string_parts = ["the ", "kelredd", "-useful gem is awesome"]

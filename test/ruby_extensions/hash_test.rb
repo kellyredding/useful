@@ -87,7 +87,7 @@ class HashTest < Test::Unit::TestCase
     should_have_instance_methods 'to_http_query_str', 'to_html_attrs'
 
     should "be able to convert to proper http query string" do
-      @expected = "?name=thomas+hardy+%2F+thomas+handy"
+      @expected = "?name=thomas%20hardy%20%2F%20thomas%20handy"
       assert_equal @expected, {:name => 'thomas hardy / thomas handy'}.to_http_query_str 
       @expected = "?id=23423&since=2009-10-14"
       assert_equal @expected, {:id => 23423, :since => "2009-10-14"}.to_http_query_str

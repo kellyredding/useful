@@ -2,6 +2,7 @@ module Useful; end
 module Useful::RubyExtensions; end
 
 require 'json' unless defined?(JSON) && defined?(JSON::parse)
+require 'useful/ruby_extensions/string' unless ::String.new.respond_to?(:cgi_escape)
 
 module Useful::RubyExtensions::Hash
   
@@ -92,7 +93,6 @@ module Useful::RubyExtensions::Hash
     #  {:poo => {:foo => 1, :bar => {:bar1 => 1, :bar2 => "nasty"}}}.to_http_query_str
     #  "?poo[bar][bar1]=1&poo[bar][bar2]=nasty&poo[foo]=1"
     def to_http_query_str(opts = {})
-      require 'cgi' unless defined?(::CGI) && defined?(::CGI::escape)
       opts[:prepend] ||= '?'
       opts[:append] ||= ''
       opts[:key_ns] ||= nil
@@ -101,7 +101,7 @@ module Useful::RubyExtensions::Hash
         val = key_val[1]
         key_s = opts[:key_ns] ? "#{opts[:key_ns]}[#{key.to_s}]" : key.to_s
         if val.kind_of?(::Array)
-          val.sort.collect{|i| "#{key_s}[]=#{::CGI.escape(i.to_s)}"}.join('&')
+          val.sort.collect{|i| "#{key_s}[]=#{i.to_s.cgi_escape}"}.join('&')
         elsif val.respond_to?('to_http_query_str')
           val.to_http_query_str({
             :prepend => '',
@@ -109,7 +109,7 @@ module Useful::RubyExtensions::Hash
             :append => ''
           })
         else
-          "#{key_s}=#{::CGI.escape(val.to_s)}"
+          "#{key_s}=#{val.to_s.cgi_escape}"
         end
       end 
       self.empty? ? '' : "#{opts[:prepend]}#{opt_strings.join('&')}#{opts[:append]}"
