@@ -41,6 +41,7 @@ module Useful::ErbHelpers::Forms
       options[:id] ||= erb_helper_common_safe_id(name)
     end
     options[:value] = value unless value.nil?
+    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     if block_given?
       @_out_buf ||= ''
       @_out_buf << tag(options.delete(:tag), options) { erb_helper_common_capture(&block) }
@@ -60,12 +61,10 @@ module Useful::ErbHelpers::Forms
   end
   
   def password_field_tag(name="password", value=nil, options={}) 
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     input_tag('password', name, value, options)
   end
   
   def file_field_tag(name, options={})
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     input_tag('file', name, nil, options)
   end
   
@@ -77,7 +76,6 @@ module Useful::ErbHelpers::Forms
       options[:class] = 'checkbox'
     end
     options[:id] ||= erb_helper_common_safe_id(rand(1000).to_s)
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     options[:checked] = OPTIONS[:checked] if checked
     input_str = input_tag('checkbox', name, value, options)
     if label.nil?
@@ -96,7 +94,6 @@ module Useful::ErbHelpers::Forms
     end
     label ||= value.to_s.capitalize
     options[:id] ||= erb_helper_common_safe_id(rand(1000).to_s)
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     options[:checked] = OPTIONS[:checked] if checked
     input_str = input_tag('radio', name, value, options)
     if label.nil?
@@ -107,7 +104,6 @@ module Useful::ErbHelpers::Forms
   end
   
   def select_tag(name, options={}, &block) 
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     html_name = (options[:multiple] == true && !name.to_s[(name.to_s.length-2)..-1] == "[]") ? "#{name}[]" : name
     options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
     options[:tag] = 'select'
@@ -120,23 +116,19 @@ module Useful::ErbHelpers::Forms
   end
 
   def text_area_tag(name, content=nil, options={}) 
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     options[:tag] = 'textarea'
     input_tag(nil, name, nil, options) { content || '' }
   end
   
   def text_field_tag(name, value=nil, options={}) 
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     input_tag('text', name, value, options)
   end
   
   def submit_tag(value="Save", options={}) 
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     input_tag('submit', 'commit', value, options)
   end
   
   def image_submit_tag(source, options={})
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     options[:src] = source
     options[:alt] ||= 'Save'
     input_tag('image', nil, nil, options)

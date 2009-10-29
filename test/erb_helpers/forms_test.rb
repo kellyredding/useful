@@ -75,6 +75,10 @@ class FormsTest < Test::Unit::TestCase
         content = "some content here"
         assert_equal tag(:input, @opts) { content }, input_tag(@opts[:type], @opts[:name]) { content }
       end
+      should "render disabled" do
+        @opts[:disabled] = Useful::ErbHelpers::Common::OPTIONS[:disabled]
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value], :disabled => true)
+      end
     end
     
     context "'label_tag'" do
@@ -107,6 +111,26 @@ class FormsTest < Test::Unit::TestCase
       should "render with a name and value and options" do
         opts = { :class => 'awesome' }
         assert_equal input_tag('hidden', @name, @value, opts), hidden_field_tag(@name, @value, opts)
+      end
+    end
+    
+    context "'password_field_tag'" do
+      setup do
+        @name = 'user'
+        @value = 'bob'
+      end
+      should "render with no args" do
+        assert_equal input_tag('password', 'password'), password_field_tag
+      end
+      should "render with just a name" do
+        assert_equal input_tag('password', @name), password_field_tag(@name)
+      end
+      should "render with just a name and value" do
+        assert_equal input_tag('password', @name, @value), password_field_tag(@name, @value)
+      end
+      should "render with a name and value and options" do
+        opts = { :size => 15 }
+        assert_equal input_tag('password', @name, @value, opts), password_field_tag(@name, @value, opts)
       end
     end
     
