@@ -99,8 +99,19 @@ module Useful::ErbHelpers::Forms
     input_tag('image', nil, nil, options)
   end
   
+  # Special options:
+  # => :size - A string specifying the dimensions (columns by rows) of the textarea (e.g., "25x10").
+  # => :rows - Specify the number of rows in the textarea
+  # => :cols - Specify the number of columns in the textarea
+  # => :escape - By default, the contents of the text input are HTML escaped. If you need unescaped contents, set this to false.
   def text_area_tag(name, content=nil, options={}) 
     options[:tag] = 'textarea'
+    if size = options.delete(:size)
+      options[:cols], options[:rows] = size.split("x") if size.respond_to?(:split)
+    end
+    unless options.has_key?(:escape) && options.delete(:escape).false?
+      content = escape_html(content)
+    end
     input_tag(nil, name, nil, options) { content || '' }
   end
   

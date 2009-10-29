@@ -11,6 +11,10 @@ module Useful::ErbHelpers::Common
     :default_submit_value => "Save changes"
   }.freeze
   
+  def clear_output_buffer
+    @_out_buf = ""
+  end
+  
   protected
   
   def erb_helper_common_safe_id(id)

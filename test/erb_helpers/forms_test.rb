@@ -205,6 +205,65 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
+    context "'text_area_tag'" do
+      setup do
+        @name = 'user'
+        @content = 'bob'
+        @opts = { :tag => 'textarea' }
+      end
+      should "render with just a name" do
+        @content = nil
+        expected = input_tag(nil, @name, nil, @opts) { '' }
+        clear_output_buffer
+        result = text_area_tag(@name)
+        assert_equal expected, result
+      end
+      should "render with a name and content escaped by default" do
+        @content = "<h1>Awesome</h1>"
+        expected = input_tag(nil, @name, nil, @opts) { escape_html(@content) }
+        clear_output_buffer
+        result = text_area_tag(@name, @content)
+        assert_equal expected, result
+      end
+      should "render content unescaped" do
+        @content = "<h1>Awesome</h1>"
+        expected = input_tag(nil, @name, nil, @opts) { @content }
+        clear_output_buffer
+        result = text_area_tag(@name, @content, :escape => false)
+        assert_equal expected, result
+      end
+      context "with size options" do
+        setup do
+          @size = "25x10"
+          @rows = 5
+          @cols = 8
+        end
+        should "render with size" do
+          @content = nil
+          sizes = @size.split('x')
+          expected = input_tag(nil, @name, nil, @opts.merge(:cols => sizes.first, :rows => sizes.last)) { '' }
+          clear_output_buffer
+          result = text_area_tag(@name, nil, :size => @size)
+          assert_equal expected, result
+        end
+        should "render with row/col options" do
+          @content = nil
+          expected = input_tag(nil, @name, nil, @opts.merge(:cols => @cols, :rows => @rows)) { '' }
+          clear_output_buffer
+          result = text_area_tag(@name, nil, :cols => @cols, :rows => @rows)
+          assert_equal expected, result
+        end
+        should "render with size and row/col options, preferring the size option" do
+          @content = nil
+          sizes = @size.split('x')
+          expected = input_tag(nil, @name, nil, @opts.merge(:cols => sizes.first, :rows => sizes.last)) { '' }
+          clear_output_buffer
+          result = text_area_tag(@name, nil, :size => @size, :cols => @cols, :rows => @rows)
+          assert_equal expected, result
+        end
+      end
+    end
+    
   end
 
 end

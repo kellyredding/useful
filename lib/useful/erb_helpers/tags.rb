@@ -16,9 +16,9 @@ module Useful::ErbHelpers::Tags
   # helpers to escape text for html
   if defined?(::Rack::Utils)
     include ::Rack::Utils
-    alias_method :h, :escape_html
+    alias_method(:h, :escape_html)
   end
-  if defined?('h')
+  if defined?(:h)
     # escape tag text content and format for text-like display
     def h_text(text, opts={})
       h(text.to_s).
