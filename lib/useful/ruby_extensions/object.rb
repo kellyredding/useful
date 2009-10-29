@@ -1,3 +1,5 @@
+require 'useful/ruby_extensions/nil_class'
+
 module Useful; end
 module Useful::RubyExtensions; end
 
@@ -72,6 +74,38 @@ module Useful::RubyExtensions::Object
       yield self
       self
     end unless ::Object.new.respond_to?('tap')
+    
+    # Invokes the method identified by the symbol +method+, passing it any arguments 
+    # and/or the block specified, just like the regular Ruby <tt>Object#send</tt> does.
+    #
+    # *Unlike* that method however, a +NoMethodError+ exception will *not* be raised 
+    # and +nil+ will be returned instead, if the receiving object is a +nil+ object or NilClass.
+    #
+    # ==== Examples
+    #
+    # Without try
+    #   @person && @person.name
+    # or
+    #   @person ? @person.name : nil
+    #
+    # With try
+    #   @person.try(:name)
+    #
+    # +try+ also accepts arguments and/or a block, for the method it is trying
+    #   Person.try(:find, 1)
+    #   @people.try(:collect) {|p| p.name}
+    #--
+    # This method definition below is for rdoc purposes only. The alias_method call 
+    # below overrides it as an optimization since +try+ behaves like +Object#send+,
+    # unless called on +NilClass+.
+    # => see try method definition on the NilClass extensions for details.
+    unless ::Object.new.respond_to?('try')
+      def try(method, *args, &block)
+        send(method, *args, &block)
+      end
+      remove_method :try
+      alias_method :try, :__send__
+    end
 
   end
   

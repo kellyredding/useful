@@ -21,7 +21,7 @@ class ObjectTest < Test::Unit::TestCase
       assert @false.false?
     end
 
-    should_have_instance_methods 'blank?', 'returning', 'tap'
+    should_have_instance_methods 'blank?', 'returning', 'tap', 'try'
     
     should "know if it is blank" do
       [nil, false,"",[],{}].each do |obj|
@@ -57,6 +57,16 @@ class ObjectTest < Test::Unit::TestCase
         to_s
       assert_equal [1..10, [2,4,6,8,10]], tapped_values
     end
+    
+    should "try method calls with nil safety" do
+      obj = [1,2,3]
+      nested_obj = [['a','b','c'], 1, 2, 3, nil]
+      assert_equal obj.first, obj.try(:first)
+      assert_equal nested_obj.first.first, nested_obj.try(:first).try(:first)
+      assert_equal nil, nested_obj.try(:last).try(:first)
+    end
+    
+
 
   end
   

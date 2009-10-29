@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TrueClassTest < Test::Unit::TestCase
   
-  context "an extended FalseClass" do
+  context "an extended TrueClass" do
     setup do
       @true = true
     end
