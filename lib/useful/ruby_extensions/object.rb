@@ -8,10 +8,12 @@ module Useful::RubyExtensions::Object
   def false?
     self == false
   end
+  alias_method :is_false?, :false?
   
   def true?
     self == true
   end
+  alias_method :is_true?, :true?
   
   module FromActivesupport
 

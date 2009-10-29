@@ -10,15 +10,19 @@ class ObjectTest < Test::Unit::TestCase
     end
     subject { @obj }
     
-    should_have_instance_methods 'false?', 'true?'
+    should_have_instance_methods 'false?', 'is_false?', 'true?', 'is_true?'
     
     should "know if its true" do
       assert @true.true?
+      assert @true.is_true?
       assert !@false.true?
+      assert !@false.is_true?
     end
     should "know if its false" do
       assert !@true.false?
+      assert !@true.is_false?
       assert @false.false?
+      assert @false.is_false?
     end
 
     should_have_instance_methods 'blank?', 'returning', 'tap', 'try'
