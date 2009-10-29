@@ -69,6 +69,41 @@ class TagsTest < Test::Unit::TestCase
       end
     end
 
+    context "'input_tag'" do
+      setup do
+        @opts = {
+          :type => 'text',
+          :name => 'user',
+          :id => 'user'
+        }
+      end
+      should "render with type, name, and default tag" do
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
+      end
+      should "render with custom tag" do
+        @opts.delete(:type)
+        tag = 'textarea'
+        assert_equal tag(tag, @opts), input_tag(nil, @opts[:name], nil, :tag => tag)
+      end
+      should "render with value implied from an ugly name" do
+        @opts[:name] = 'user[name]'
+        @opts[:id] = 'user_name'
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
+      end
+      should "render with explicit value" do
+        @opts[:value] = "some awesome text"
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value])
+      end
+      should "render with a block passed" do
+        content = "some content here"
+        assert_equal tag(:input, @opts) { content }, input_tag(@opts[:type], @opts[:name]) { content }
+      end
+      should "render disabled" do
+        @opts[:disabled] = Useful::ErbHelpers::Common::OPTIONS[:disabled]
+        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value], :disabled => true)
+      end
+    end
+    
   end
   
 end

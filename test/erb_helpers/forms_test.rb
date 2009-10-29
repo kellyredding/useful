@@ -46,41 +46,6 @@ class FormsTest < Test::Unit::TestCase
       end
     end
     
-    context "'input_tag'" do
-      setup do
-        @opts = {
-          :type => 'text',
-          :name => 'user',
-          :id => 'user'
-        }
-      end
-      should "render with type, name, and default tag" do
-        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
-      end
-      should "render with custom tag" do
-        @opts.delete(:type)
-        tag = 'textarea'
-        assert_equal tag(tag, @opts), input_tag(nil, @opts[:name], nil, :tag => tag)
-      end
-      should "render with value implied from an ugly name" do
-        @opts[:name] = 'user[name]'
-        @opts[:id] = 'user_name'
-        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name])
-      end
-      should "render with explicit value" do
-        @opts[:value] = "some awesome text"
-        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value])
-      end
-      should "render with a block passed" do
-        content = "some content here"
-        assert_equal tag(:input, @opts) { content }, input_tag(@opts[:type], @opts[:name]) { content }
-      end
-      should "render disabled" do
-        @opts[:disabled] = Useful::ErbHelpers::Common::OPTIONS[:disabled]
-        assert_equal tag(:input, @opts), input_tag(@opts[:type], @opts[:name], @opts[:value], :disabled => true)
-      end
-    end
-    
     context "'label_tag'" do
       should "render with value implied from the name" do
         name = "user"
@@ -214,21 +179,21 @@ class FormsTest < Test::Unit::TestCase
       should "render with just a name" do
         @content = nil
         expected = input_tag(nil, @name, nil, @opts) { '' }
-        clear_output_buffer
+        erb_helper_clear_output_buffer
         result = text_area_tag(@name)
         assert_equal expected, result
       end
       should "render with a name and content escaped by default" do
         @content = "<h1>Awesome</h1>"
         expected = input_tag(nil, @name, nil, @opts) { escape_html(@content) }
-        clear_output_buffer
+        erb_helper_clear_output_buffer
         result = text_area_tag(@name, @content)
         assert_equal expected, result
       end
       should "render content unescaped" do
         @content = "<h1>Awesome</h1>"
         expected = input_tag(nil, @name, nil, @opts) { @content }
-        clear_output_buffer
+        erb_helper_clear_output_buffer
         result = text_area_tag(@name, @content, :escape => false)
         assert_equal expected, result
       end
@@ -242,14 +207,14 @@ class FormsTest < Test::Unit::TestCase
           @content = nil
           sizes = @size.split('x')
           expected = input_tag(nil, @name, nil, @opts.merge(:cols => sizes.first, :rows => sizes.last)) { '' }
-          clear_output_buffer
+          erb_helper_clear_output_buffer
           result = text_area_tag(@name, nil, :size => @size)
           assert_equal expected, result
         end
         should "render with row/col options" do
           @content = nil
           expected = input_tag(nil, @name, nil, @opts.merge(:cols => @cols, :rows => @rows)) { '' }
-          clear_output_buffer
+          erb_helper_clear_output_buffer
           result = text_area_tag(@name, nil, :cols => @cols, :rows => @rows)
           assert_equal expected, result
         end
@@ -257,47 +222,8 @@ class FormsTest < Test::Unit::TestCase
           @content = nil
           sizes = @size.split('x')
           expected = input_tag(nil, @name, nil, @opts.merge(:cols => sizes.first, :rows => sizes.last)) { '' }
-          clear_output_buffer
+          erb_helper_clear_output_buffer
           result = text_area_tag(@name, nil, :size => @size, :cols => @cols, :rows => @rows)
-          assert_equal expected, result
-        end
-      end
-    end
-
-    context "'select_tag'" do
-      setup do
-        @name = 'user'
-        @select_options = '<option>test</option>'
-        @opts = { :tag => 'select' }
-      end
-      should "render with just a name" do
-        @select_options = nil
-        expected = input_tag(nil, @name, nil, @opts)
-        clear_output_buffer
-        result = select_tag(@name)
-        assert_equal expected, result
-      end
-      should "render with a name and select options" do
-        expected = input_tag(nil, @name, nil, @opts) { @select_options }
-        clear_output_buffer
-        result = select_tag(@name) { @select_options }
-        assert_equal expected, result
-      end
-      context "using multiple selection" do
-        setup do
-          @opts[:multiple] = 'multiple'
-        end
-        should "render" do
-          expected = input_tag(nil, @name+"[]", nil, @opts) { @select_options }
-          clear_output_buffer
-          result = select_tag(@name, :multiple => true) { @select_options }
-          assert_equal expected, result
-        end
-        should "render with nested name" do
-          @name += "[name]"
-          expected = input_tag(nil, @name+"[]", nil, @opts) { @select_options }
-          clear_output_buffer
-          result = select_tag(@name, :multiple => true) { @select_options }
           assert_equal expected, result
         end
       end

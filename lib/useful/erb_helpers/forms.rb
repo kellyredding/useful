@@ -1,3 +1,7 @@
+# Note: these helpers are NOT actionpack safe
+# => these helpers should NOT be included in the useful/rails_extensions/erb
+# => these helpers are designed to emulate their corresponding actionpack helpers
+
 require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
 require 'useful/ruby_extensions/string' unless ::String.new.respond_to?('humanize') && ::String.new.respond_to?('ends_with?')
@@ -34,23 +38,6 @@ module Useful::ErbHelpers::Forms
     end
   end
   
-  def input_tag(type, name, value=nil, options={}, &block)
-    options[:tag] ||= :input
-    options[:type] = type unless type.nil?
-    unless name.nil?
-      options[:name] = name 
-      options[:id] ||= erb_helper_common_safe_id(name)
-    end
-    options[:value] = value unless value.nil?
-    options[:disabled] = OPTIONS[:disabled] if options[:disabled]
-    if block_given?
-      @_out_buf ||= ''
-      @_out_buf << tag(options.delete(:tag), options) { erb_helper_common_capture(&block) }
-    else
-      tag(options.delete(:tag), options)
-    end
-  end
-
   def label_tag(name, value=nil, options={})
     value ||= name.to_s.gsub(/\[/, '_').gsub(/\]/, '').humanize
     options[:for] ||= erb_helper_common_safe_id(name)
@@ -116,52 +103,14 @@ module Useful::ErbHelpers::Forms
     input_tag(nil, name, nil, options) { content || '' }
   end
   
-  # This one's a little different than the corresponding active support version:
-  # => ie. you don't pass an options string as the 2nd argument
-  # => you, instead, pass a block that should return the desired options string
-  # => ie, select_tag('user') { '<option>test</option>' }
-  def select_tag(name, options={}, &block) 
-    html_name = (options[:multiple].true? && !name.to_s.ends_with?("[]")) ? "#{name}[]" : name
-    options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
-    options[:tag] = 'select'
-    input_tag(nil, html_name, nil, options, &block)
-  end
+  # Note: purposely left out:
+  # => select_tag
+  # => check_box_tag
+  # => radio_button_tag
+  # Not going to reinvent the inferior actionpack versions here.
+  # => prefer, instead, the corresponding 'proper' versions
+  # => see useful/erb_helpers/proper.rb (which is included in useful/rails_extensions/erb)
 
- def check_box_tag(name, label=nil, value='1', checked=false, options={})
-    tag_name = options.delete(:tag) || :div
-    if options.has_key?(:class)
-      options[:class] += ' checkbox'
-    else
-      options[:class] = 'checkbox'
-    end
-    options[:id] ||= erb_helper_common_safe_id(rand(1000).to_s)
-    options[:checked] = OPTIONS[:checked] if checked
-    input_str = input_tag('checkbox', name, value, options)
-    if label.nil?
-      input_str
-    else
-      tag(tag_name, :class => 'checkbox') { input_str + label_tag(options[:id], label)  }
-    end
-  end
-  
-  def radio_button_tag(name, value, label=nil, checked=false, options={}) 
-    tag_name = options.delete(:tag) || :span
-    if options.has_key?(:class)
-      options[:class] += ' radiobutton'
-    else
-      options[:class] = 'radiobutton'
-    end
-    label ||= value.to_s.capitalize
-    options[:id] ||= erb_helper_common_safe_id(rand(1000).to_s)
-    options[:checked] = OPTIONS[:checked] if checked
-    input_str = input_tag('radio', name, value, options)
-    if label.nil?
-      input_str
-    else
-      label_tag(options[:id], input_str + tag(tag_name) { label }, :class => options.delete(:class))
-    end
-  end
-  
   def self.included(receiver)
     receiver.send :include, Useful::ErbHelpers::Tags
   end

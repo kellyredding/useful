@@ -1,3 +1,7 @@
+# Note: these helpers are designed to be namespaced and actionpack safe
+# => these helpers are included in the useful/rails_extensions/erb
+# => don't put any actionpack helpers in this module
+
 module Useful; end
 module Useful::ErbHelpers; end
 
@@ -11,7 +15,7 @@ module Useful::ErbHelpers::Common
     :default_submit_value => "Save changes"
   }.freeze
   
-  def clear_output_buffer
+  def erb_helper_clear_output_buffer
     @_out_buf = ""
   end
   

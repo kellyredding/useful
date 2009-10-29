@@ -43,7 +43,8 @@ end
 Sinatra::Application.helpers Useful::SinatraHelpers::Erb
 
 require "useful/erb_helpers"
-Sinatra::Application.helpers Useful::ErbHelpers::Forms
-Sinatra::Application.helpers Useful::ErbHelpers::Links
 Sinatra::Application.helpers Useful::ErbHelpers::Tags
+Sinatra::Application.helpers Useful::ErbHelpers::Links
+Sinatra::Application.helpers Useful::ErbHelpers::Forms
+Sinatra::Application.helpers Useful::ErbHelpers::Proper
 
