@@ -9,6 +9,7 @@ class LinksTest < Test::Unit::TestCase
       @link_content = "Da Googs"
       @link_href = "http://www.google.com"
       @link_options = {:class => 'awesome'}
+      @email = "me@domain.com"
     end
 
     context "'link_to'" do
@@ -40,11 +41,28 @@ class LinksTest < Test::Unit::TestCase
       end      
     end
 
-    context "'mail_link_to'" do
-      should "render" do
-        email = "kelly@kelredd.com"
-        link_tag = link_to(@link_content, "mailto: #{email}", @link_options)
-        assert_equal link_tag, mail_link_to(@link_content, email, @link_options)
+    context "'mail_to'" do
+      should "render with just an email address" do
+        link_tag = link_to(@email, "mailto: #{@email}")
+        assert_equal link_tag, mail_to(@email)
+      end
+      should "render with custom display value and options" do
+        link_tag = link_to(@link_content, "mailto: #{@email}", @link_options)
+        assert_equal link_tag, mail_to(@link_content, @email, @link_options)
+      end
+      should "render obfuscating the email address displayed" do
+        obfus = "me_at_domain_dot_com"
+        link_tag = link_to(obfus, "mailto: #{@email}", @link_options)
+        assert_equal link_tag, mail_to(@email, @link_options.merge(:replace_at => "_at_", :replace_dot => "_dot_"))
+      end
+      should "render with link disabled" do
+        obfus = "me_at_domain_dot_com"
+        assert_equal obfus, mail_to(@email, @link_options.merge(:disabled => true, :replace_at => "_at_", :replace_dot => "_dot_"))
+      end
+      should "render email composition options" do
+        composition = { :cc => "ccaddress@domain.com", :subject => "This is an example email" }
+        link_tag = link_to(@email, "mailto: #{@email}#{composition.to_http_query_str}", @link_options)
+        assert_equal link_tag, mail_to(@email, @link_options.merge(composition))
       end
     end
 

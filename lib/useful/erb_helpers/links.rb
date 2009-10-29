@@ -1,5 +1,7 @@
 require 'useful/erb_helpers/common'
 require 'useful/erb_helpers/tags'
+require 'useful/ruby_extensions/string' unless ::String.new.respond_to?('cgi_escape')
+require 'useful/ruby_extensions/hash' unless ::Hash.new.respond_to?('to_http_query_str')
 
 module Useful; end
 module Useful::ErbHelpers; end
@@ -31,15 +33,23 @@ module Useful::ErbHelpers::Links
   end
   
   # helper for generating a mailto:
-  # EX : mail_link_to "test@example.com"
-  # => <a href="mailto:test@example.com">test@example.com</a>
-  # EX : mail_link_to "Test", "test@example.com"
-  # => <a href="mailto:test@example.com">Test</a>
-  # EX : mail_link_to "Test", "test@example.com", :class => "awesome"
-  # => <a href="mailto:test@example.com" class="awesome">Kelly</a>
-  def mail_link_to(*args)
+  # EX: mail_to "me@domain.com"
+  #   # => <a href="mailto:me@domain.com">me@domain.com</a>
+  # EX: mail_to "me@domain.com", nil, :replace_at => "_at_", :replace_dot => "_dot_", :class => "email"
+  #   # => <a href="mailto:me@domain.com" class="email">me_at_domain_dot_com</a>
+  # EX: mail_to "me@domain.com", nil, :replace_at => " [at]", :replace_dot => " [dot] ", :disabled => true
+  #   # => me [at] domain [dot] com
+  # EX: mail_to "me@domain.com", "My email", :cc => "ccaddress@domain.com", :subject => "This is an example email"
+  #   # => <a href="mailto:me@domain.com?cc=ccaddress@domain.com&subject=This%20is%20an%20example%20email">My email</a>
+  def mail_to(*args)
     content, email, options = link_content_href_opts(args)
-    link_to content, "mailto: #{email}", options
+    email_args = [:cc, :bcc, :subject, :body].inject({}) do |args, arg|
+      args[arg] = options.delete(arg) if options.has_key?(arg)
+      args
+    end
+    content.gsub!(/@/, options.delete(:replace_at)) if options.has_key?(:replace_at)
+    content.gsub!(/\./, options.delete(:replace_dot)) if options.has_key?(:replace_dot)
+    options.delete(:disabled) ? content : link_to(content, "mailto: #{email}#{email_args.to_http_query_str}", options)
   end
 
   def link_to_function(content, function, opts={})
@@ -120,7 +130,7 @@ module Useful::ErbHelpers::Links
     if args[1] && !args[1].kind_of?(::Hash)
       [args[0], args[1], (args[2] || {})]
     else
-      [args[0], args[0], (args[1] || {})]
+      [args[0], args[0].dup, (args[1] || {})]
     end
   end
   
