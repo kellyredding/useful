@@ -45,6 +45,102 @@ class ProperTest < Test::Unit::TestCase
       end
     end
 
+    context "'proper_check_box_tag'" do
+      setup do
+        @name = "complete"
+        @value = '1'
+        @opts = {
+          :id => 'complete'
+        }
+      end
+      should "render standalone check box" do
+        expected = input_tag(:checkbox, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name, :disable_unchecked_value => true)
+        assert_equal expected, result
+      end
+      should "render standalone check box with nested name" do
+        @name = "user[complete]"
+        @opts[:id] = "user_complete"
+        expected = input_tag(:checkbox, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name, :disable_unchecked_value => true)
+        assert_equal expected, result
+      end
+      should "render standalone check box checked" do
+        @opts[:checked] = Useful::ErbHelpers::Common::OPTIONS[:checked]
+        expected = input_tag(:checkbox, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name, :checked => true, :disable_unchecked_value => true)
+        assert_equal expected, result
+      end
+      should "render labeled check box" do
+        label_text = 'complete ?'
+        expected = input_tag(:checkbox, @name, @value, @opts)
+        expected << tag(:label, :for => @opts[:id]) { label_text }
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name, :label => label_text, :disable_unchecked_value => true)
+        assert_equal expected, result
+      end
+      should "render standalone check box with an unchecked default value" do
+        expected = input_tag(:hidden, @name, '0', :id => "#{@opts[:id]}_hidden")
+        expected << input_tag(:checkbox, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name)
+        assert_equal expected, result
+      end
+      should "render labeled check box with an unchecked default value" do
+        label_text = 'complete ?'
+        expected = input_tag(:hidden, @name, '0', :id => "#{@opts[:id]}_hidden")
+        expected << input_tag(:checkbox, @name, @value, @opts)
+        expected << tag(:label, :for => @opts[:id]) { label_text }
+        erb_helper_clear_output_buffer
+        result = proper_check_box_tag(@name, :label => label_text)
+        assert_equal expected, result
+      end
+    end
+
+    context "'proper_radio_button_tag'" do
+      setup do
+        @name = "level"
+        @value = '1'
+        @opts = {
+          :id => 'level'
+        }
+      end
+      should "render standalone radio button" do
+        expected = input_tag(:radio, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_radio_button_tag(@name, @value, :label => '')
+        assert_equal expected, result
+      end
+      should "render standalone radio button with nested name" do
+        @name = "user[level]"
+        @opts[:id] = "user_level"
+        expected = input_tag(:radio, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_radio_button_tag(@name, @value, :label => '')
+        assert_equal expected, result
+      end
+      should "render standalone radio button checked" do
+        @opts[:checked] = Useful::ErbHelpers::Common::OPTIONS[:checked]
+        expected = input_tag(:radio, @name, @value, @opts)
+        erb_helper_clear_output_buffer
+        result = proper_radio_button_tag(@name, @value, true, :label => '')
+        assert_equal expected, result
+      end
+      should "render labeled radio button" do
+        label_text = '1'
+        rdbtn = input_tag(:radio, @name, @value, @opts)
+        expected = tag(:label, :for => @opts[:id]) do
+          rdbtn + tag(:span) { label_text }
+        end
+        erb_helper_clear_output_buffer
+        result = proper_radio_button_tag(@name, @value)
+        assert_equal expected, result
+      end
+    end
+
   end
 
 end
