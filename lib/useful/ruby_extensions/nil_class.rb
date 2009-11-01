@@ -9,6 +9,10 @@ module Useful::RubyExtensions::NilClass
       nil
     end unless nil.respond_to?('try')
 
+    def to_boolean
+      false
+    end unless nil.respond_to?('to_boolean')
+
   end
   
   def self.included(receiver)
