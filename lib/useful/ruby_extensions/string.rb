@@ -67,7 +67,7 @@ module Useful::RubyExtensions::String
     end
     
     def to_boolean
-      self =~ /^(true|1)$/i ? true : false
+      self =~ /^(false|0)$/i ? false : true
     end
     
     def from_currency_to_f

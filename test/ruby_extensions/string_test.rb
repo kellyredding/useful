@@ -90,9 +90,9 @@ class StringTest < Test::Unit::TestCase
       assert !"false".to_boolean
       assert "1".to_boolean
       assert "true".to_boolean
-      assert !"2".to_boolean
-      assert !"poo".to_boolean
-      assert !"".to_boolean
+      assert "2".to_boolean
+      assert "poo".to_boolean
+      assert "".to_boolean
     end
     
     should_have_instance_methods 'from_currency_to_f'
