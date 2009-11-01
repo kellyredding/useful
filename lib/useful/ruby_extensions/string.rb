@@ -70,6 +70,10 @@ module Useful::RubyExtensions::String
       self =~ /^(true|1)$/i ? true : false
     end
     
+    def from_currency_to_f
+      self.gsub(/[^0-9.-]/,'').to_f
+    end
+    
   end
   
   module FromActivesupport

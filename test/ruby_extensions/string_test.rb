@@ -94,6 +94,26 @@ class StringTest < Test::Unit::TestCase
       assert !"poo".to_boolean
     end
     
+    should_have_instance_methods 'from_currency_to_f'
+    should "be convertable to float from currency" do 
+      assert_equal 1.0, "$1".from_currency_to_f
+      assert_equal 1.0, "$000000001".from_currency_to_f
+      assert_equal 1.0, "$1.0".from_currency_to_f
+      assert_equal 1.0, "$1.000000".from_currency_to_f
+      assert_equal 1.0, "$000000001".from_currency_to_f
+      assert_equal 1.01, "$1.01".from_currency_to_f
+      
+      # does not round - its dumb
+      assert_equal 1.015, "$1.015".from_currency_to_f
+
+      # Note, only dollars-string aware
+      # => just pulls out any numeric string parts and converts to float
+      assert_equal 1.0, "1 dollar".from_currency_to_f
+      assert_equal 1.0, "1 cent".from_currency_to_f
+      assert_equal 2.0, "2 cents".from_currency_to_f
+      assert_equal 1.0, "abba dabba 1 dabba doo".from_currency_to_f
+    end
+    
     context "with activesupport extensions" do
       
       should_have_class_methods 'camelize'
