@@ -68,8 +68,8 @@ module Useful::RubyExtensions::Hash
       if !keys.respond_to?('empty?') || keys.empty?
         nil
       else
-        val = self[keys.first]
-        val.respond_to?('get_value') && keys.length > 1 ? val.get_value(keys[1..-1]) : val
+        val = self[keys.shift]
+        val.respond_to?('get_value') && !keys.empty? ? val.get_value(keys) : val
       end
     end
     alias search get_value
