@@ -15,6 +15,18 @@ module Useful::RubyExtensions::Object
   end
   alias_method :is_true?, :true?
   
+  def capture_std_output
+    out = ::StringIO.new
+    err = ::StringIO.new
+    $stdout = out
+    $stderr = err
+    yield
+    return out, err
+  ensure
+    $stdout = STDOUT
+    $stderr = STDERR
+  end
+  
   module FromActivesupport
 
     def blank?

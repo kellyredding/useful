@@ -25,6 +25,32 @@ class ObjectTest < Test::Unit::TestCase
       assert @false.is_false?
     end
 
+    should_have_instance_methods 'capture_std_output'    
+    should "capture $stdout" do
+      out, err = capture_std_output do
+        p "some output"
+      end
+      assert_kind_of ::StringIO, out
+      assert_kind_of ::StringIO, err
+      assert err.string.empty?
+      assert_equal "\"some output\"\n", out.string
+    end
+    should "capture $stderr" do
+      out, err = capture_std_output do
+        $stderr.write "an error"
+      end
+      assert out.string.empty?
+      assert_equal "an error", err.string
+    end
+    should "capture both $stdout and $stderr at the same time" do
+      out, err = capture_std_output do
+        p "some more output"
+        $stderr.write "an error"
+      end
+      assert_equal "\"some more output\"\n", out.string
+      assert_equal "an error", err.string
+    end
+
     should_have_instance_methods 'blank?', 'returning', 'tap', 'try'
     
     should "know if it is blank" do
