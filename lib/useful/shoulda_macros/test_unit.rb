@@ -33,7 +33,7 @@ module Useful::ShouldaMacros::TestUnit
     get_options!(readers)
     klass = described_type
     readers.each do |reader|
-      should_have_instance_method reader
+      should_have_instance_methods reader
     end
   end unless Test::Unit::TestCase.method_defined? :should_have_readers
   
@@ -41,7 +41,7 @@ module Useful::ShouldaMacros::TestUnit
     get_options!(writers)
     klass = described_type
     writers.each do |writer|
-      should_have_instance_method "#{writer}="
+      should_have_instance_methods "#{writer}="
     end
   end unless Test::Unit::TestCase.method_defined? :should_have_writers
   
@@ -49,7 +49,7 @@ module Useful::ShouldaMacros::TestUnit
     get_options!(accessors)
     klass = described_type
     accessors.each do |accessor|
-      should_have_instance_method accessor, "#{accessor}="
+      should_have_instance_methods accessor, "#{accessor}="
     end
   end unless Test::Unit::TestCase.method_defined? :should_have_accessors
   
