@@ -1,3 +1,5 @@
+require 'useful/ruby_extensions/string' unless String.new.respond_to?(:constantize)
+
 module Useful; end
 module Useful::ShouldaMacros; end
 
