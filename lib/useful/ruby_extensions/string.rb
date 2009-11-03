@@ -2,6 +2,8 @@ module Useful; end
 module Useful::RubyExtensions; end
 
 module Useful::RubyExtensions::String
+  
+  EMAIL_REGEXP = /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
   module ClassMethods
 
@@ -22,6 +24,10 @@ module Useful::RubyExtensions::String
     
     def match?(string, pattern)
       !string.match(pattern).nil?
+    end
+    
+    def valid_email?(string)
+      match?(string, EMAIL_REGEXP)
     end
     
     def show_regexp(string, re)
@@ -60,6 +66,10 @@ module Useful::RubyExtensions::String
 
     def match?(pattern)
       self.class.match?(self, pattern)
+    end
+
+    def valid_email?
+      self.class.valid_email?(self)
     end
 
     def show_regexp(re)

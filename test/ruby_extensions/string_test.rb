@@ -64,8 +64,8 @@ class StringTest < Test::Unit::TestCase
         @no_match_re = /sucks/
       end
       
-      should_have_class_methods 'match?', 'show_regexp'
-      should_have_instance_methods 'match?', 'show_regexp'
+      should_have_class_methods 'match?', 'valid_email?', 'show_regexp'
+      should_have_instance_methods 'match?', 'valid_email?', 'show_regexp'
       should "answer match question at class level" do
         assert String.match?(@string_parts.join, @match_re)
         assert !String.match?(@string_parts.join, @no_match_re)
@@ -73,6 +73,22 @@ class StringTest < Test::Unit::TestCase
       should "answer match question at instance level" do
         assert @string_parts.join.match?(@match_re)
         assert !@string_parts.join.match?(@no_match_re)
+      end
+      should "answer valid_email question at class level" do
+        assert String.valid_email?("test@example.com")
+        assert !String.valid_email?("@example.com")
+        assert !String.valid_email?("*@example.com")
+        assert !String.valid_email?("test@.com")
+        assert !String.valid_email?("test@*.com")
+        assert !String.valid_email?("test@example")
+        assert !String.valid_email?("test@example.")
+        assert !String.valid_email?("test@example.*")
+        assert !String.valid_email?("test@example.1")
+        assert !String.valid_email?("test@example.a")
+      end
+      should "answer valid_email question at instance level" do
+        assert "test@example.com".valid_email?
+        assert !"@example.com".valid_email?
       end
       should "show the regular expression at class level" do
         assert_equal @string_parts[0]+'<<'+@string_parts[1]+'>>'+@string_parts[2], String.show_regexp(@string_parts.join, @match_re)
