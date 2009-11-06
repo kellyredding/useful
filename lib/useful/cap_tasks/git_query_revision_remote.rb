@@ -7,6 +7,10 @@ Capistrano::Configuration.instance.load do
   namespace :deploy do
   
     task :before_update_code, :except => { :no_release => true } do
+
+      # Set the branch name to current git HEAD if this stage is configured that way
+      set :branch, run_locally("git symbolic-ref HEAD 2>/dev/null").split('/').last.strip if branch == :current_git_branch
+
       # hack to remotely lookup the revision sending the config'd scm_password
       # => prevents having to enter it locally
       set :real_revision, source.local.query_revision(revision) { |cmd|
