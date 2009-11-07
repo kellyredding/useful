@@ -145,6 +145,7 @@ module Useful::ErbHelpers::Links
   
   def build_src_href(src, options)
     href = ""
+    src = src.to_s
     href += ['/'].include?(src[0..0]) ? src : "/#{options[:default_path]}/#{src}"
     href += options[:extension] unless src.include?(options[:extension])
     href += "?#{Time.now.to_i}" if options[:environment].to_s == 'development'

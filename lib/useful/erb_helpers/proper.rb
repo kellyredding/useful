@@ -24,7 +24,8 @@ module Useful::ErbHelpers::Proper
     html_name = (options[:multiple].is_true? && !name.to_s.ends_with?("[]")) ? "#{name}[]" : name
     options[:multiple] = OPTIONS[:multiple] if options[:multiple] == true
     options[:tag] = 'select'
-    input_tag(nil, html_name, nil, options, &block)
+    @_out_buf ||= ''
+    @_out_buf << input_tag(nil, html_name, nil, options, &block)
   end
 
   # TODO: write tests

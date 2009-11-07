@@ -47,8 +47,7 @@ module Useful::ErbHelpers::Tags
     options[:value] = value unless value.nil?
     options[:disabled] = OPTIONS[:disabled] if options[:disabled]
     if block_given?
-      @_out_buf ||= ''
-      @_out_buf << tag(options.delete(:tag), options) { erb_helper_common_capture(&block) }
+      tag(options.delete(:tag), options) { erb_helper_common_capture(&block) }
     else
       tag(options.delete(:tag), options)
     end
