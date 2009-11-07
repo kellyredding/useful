@@ -27,18 +27,18 @@ Capistrano::Configuration.instance.load do
       run "touch #{current_path}/tmp/restart.txt"
     end
 
-  end
+    namespace :web do
+      desc "_: (#{application}) Enable app and remove down page."
+      task :enable, :roles => :app, :except => { :no_release => true } do
+        run "rm #{current_path}/public/#{down_html}.html"
+      end
 
-  namespace :web do
-    desc "_: (#{application}) Enable app and remove down page."
-    task :enable, :roles => :app, :except => { :no_release => true } do
-      run "rm #{current_path}/public/#{down_html}.html"
+      desc "_: (#{application}) Put up down page and disable app"
+      task :disable, :roles => :app, :except => { :no_release => true } do
+        run "cp #{shared_path}/#{down_html}.html #{current_path}/public/#{down_html}.html"
+      end
     end
 
-    desc "_: (#{application}) Put up down page and disable app"
-    task :disable, :roles => :app, :except => { :no_release => true } do
-      run "cp #{shared_path}/#{down_html}.html #{current_path}/public/#{down_html}.html"
-    end
   end
 
 end
