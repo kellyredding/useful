@@ -4,9 +4,9 @@
 
 A collection of useful helpers for various ruby things.  Includes
 ruby extensions that play nice with activesupport, helpers for
-sinatra/rails/activerecord/erb, etc...
+rails/activerecord/erb, etc...
 
-You probably never want them all, all the time, but just require in
+This is my tool belt.  You probably never want them all, all the time, but just require in
 the pieces you are interested in.
 
 == Installation
@@ -22,8 +22,9 @@ the pieces you are interested in.
 
     require 'rubygems'
     require 'useful/ruby_extensions'
-    require 'useful/sinatra_helpers'
 
+    # require in the code you need when you need it
+    
 == License
 
 Copyright (c) 2009 Kelly Redding
