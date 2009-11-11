@@ -8,11 +8,19 @@ module Useful::ShouldaMacros::TestUnit::Files
   
   protected
   
-  def should_have_files(root_path, *files)
+  def should_have_files(*files)
     the_files = files.flatten
-    the_files.each do |file|
-      should "have the file '#{file}' in '#{root_path}'" do
-        assert File.exists?(File.join(root_path, file)), "'#{file}' does not exist in '#{root_path}'"
+    if the_files.empty?
+      should "have @root_path" do
+        assert @root_path, "the variable @root_path is not defined"
+        assert File.exists?(@root_path), "'#{@root_path}' does not exist"
+      end
+    else
+      the_files.each do |file|
+        should "have the file '#{file}' in @root_path" do
+          assert @root_path, "the variable @root_path is not defined"
+          assert File.exists?(File.join(@root_path, file)), "'#{file}' does not exist in '#{@root_path}'"
+        end
       end
     end
   end
