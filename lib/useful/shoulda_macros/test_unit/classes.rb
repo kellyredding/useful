@@ -14,7 +14,12 @@ module Useful::ShouldaMacros::TestUnit::Classes
     klass = described_type
     methods.each do |method|
       should "respond to instance method ##{method}" do
-        assert_respond_to((klass.new rescue subject), method, "#{klass.name} does not have instance method #{method}")
+        the_subject = begin
+          klass.new
+        rescue Exception => err
+          subject
+        end
+        assert_respond_to(the_subject, method, "#{klass.name} does not have instance method #{method}")
       end
     end
   end unless Test::Unit::TestCase.method_defined? :should_have_instance_methods
