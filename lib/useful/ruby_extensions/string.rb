@@ -108,6 +108,20 @@ module Useful::RubyExtensions::String
         end
       end unless ::String.respond_to?('camelize')
 
+      # Create a class name from a string like Rails does for table names to models.
+      # => Note: unlike Rails, this one does not use inflectors to singularize
+      # => Note: this returns a string and not a Class. (To convert to an actual class
+      # follow +classify+ with +constantize+.)
+      #
+      # Examples:
+      #   "egg_and_hams".classify         # => "EggAndHams"
+      #   "active_record/errors".classify # => "ActiveRecord::Errors"
+      #   "active_record.error".classify  # => "Error"
+      def classify(class_str)
+        # strip out any leading schema name
+        camelize(class_str.to_s.sub(/.*\./, ''))
+      end unless ::String.respond_to?('classify')
+      
       # Capitalizes the first word and turns underscores into spaces and strips a
       # trailing "_id", if any. Like +titleize+, this is meant for creating pretty output.
       #
@@ -117,7 +131,7 @@ module Useful::RubyExtensions::String
       def humanize(lower_case_and_underscored_word)
         result = lower_case_and_underscored_word.to_s.dup
         result.gsub(/_id$/, "").gsub(/_/, " ").capitalize
-      end
+      end unless ::String.respond_to?('humanize')
 
       # Capitalizes all the words and replaces some characters in the string to create
       # a nicer looking title. +titleize+ is meant for creating pretty output. It is not
@@ -128,7 +142,7 @@ module Useful::RubyExtensions::String
       #   "x-men: the last stand".titleize  # => "X Men: The Last Stand"
       def titleize(word)
         humanize(underscore(word)).gsub(/\b('?[a-z])/) { $1.capitalize }
-      end
+      end unless ::String.respond_to?('titleize')
 
       # The reverse of +camelize+. Makes an underscored, lowercase form from the expression in the string.
       #
@@ -216,6 +230,10 @@ module Useful::RubyExtensions::String
         end
       end unless "".respond_to?('camelize')
       alias_method :camelcase, :camelize unless "".respond_to?('camelcase')
+
+      def classify
+        self.class.classify(self)
+      end unless "".respond_to?('classify')
 
       def humanize
         self.class.humanize(self)

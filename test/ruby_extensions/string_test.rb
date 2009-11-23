@@ -143,6 +143,19 @@ class StringTest < Test::Unit::TestCase
         assert_equal "ActiveRecord::Errors", "active_record/errors".camelize
         assert_equal "activeRecord::Errors", "active_record/errors".camelize(:lower)
       end
+      
+      should_have_class_methods 'classify'
+      should_have_instance_methods 'classify'
+      should "classify both at the class and instance levels" do
+        assert_equal "ActiveRecord", String.classify("active_record")
+        assert_equal "ActiveRecord::Errors", String.classify("active_record/errors")
+        assert_equal "ActiveRecord::Error", String.classify("active_record/error")
+        assert_equal "Error", String.classify("active_record.error")
+        assert_equal "ActiveRecord", "active_record".classify
+        assert_equal "ActiveRecord::Errors", "active_record/errors".classify
+        assert_equal "ActiveRecord::Error", "active_record/error".classify
+        assert_equal "Error", "active_record.error".classify
+      end
 
       should_have_class_methods 'humanize'
       should_have_instance_methods 'humanize'
