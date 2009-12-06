@@ -1,7 +1,7 @@
 module Useful; end
 module Useful::RubyExtensions; end
 
-module Useful::RubyExtensions::Fixnum
+module Useful::RubyExtensions::Integer
   
   # returns a string reprensentation of the number padded with pad_num to a specified length
   def pad(length = 3, pad_num = 0)
@@ -22,7 +22,7 @@ module Useful::RubyExtensions::Fixnum
     value
   end
   
-  # return a Time object for the given Fixnum
+  # return a Time object for the given Integer
   def to_time
     Time.at(self)
   end
@@ -62,6 +62,6 @@ module Useful::RubyExtensions::Fixnum
   
 end
 
-class Fixnum
-  include Useful::RubyExtensions::Fixnum
+class Integer
+  include Useful::RubyExtensions::Integer
 end

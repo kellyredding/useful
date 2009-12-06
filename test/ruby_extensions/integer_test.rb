@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class FixnumTest < Test::Unit::TestCase
+class IntegerTest < Test::Unit::TestCase
   
-  context "an extended Fixnum" do
+  context "an extended Integer" do
     setup do
-      @fixnum = 5
+      @integer = 5
     end
-    subject { @fixnum }
+    subject { @integer }
     
     should_have_instance_methods 'pad', 'to_nearest_value', 'to_time', 'to_time_at', 'ordinalize'
     

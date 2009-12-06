@@ -1,6 +1,8 @@
 module Useful; end
 module Useful::RubyExtensions; end
 
+require 'useful/ruby_extensions/integer' unless 1.respond_to?(:to_time_at)
+
 module Useful::RubyExtensions::String
   
   EMAIL_REGEXP = /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
@@ -85,7 +87,7 @@ module Useful::RubyExtensions::String
     end
     
     def to_time_at
-      Time.at(self.to_i)
+      self.to_i.to_time_at
     end
 
   end
