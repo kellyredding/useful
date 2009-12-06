@@ -22,6 +22,11 @@ module Useful::RubyExtensions::Fixnum
     value
   end
   
+  # return a Time object for the given Fixnum
+  def to_time
+    Time.at(self)
+  end
+  
   module FromActivesupport
     # All methods here will yield to their Activesupport versions, if defined
     
