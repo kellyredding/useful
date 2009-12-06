@@ -26,6 +26,7 @@ module Useful::RubyExtensions::Fixnum
   def to_time
     Time.at(self)
   end
+  alias_method :to_time_at, :to_time
   
   module FromActivesupport
     # All methods here will yield to their Activesupport versions, if defined

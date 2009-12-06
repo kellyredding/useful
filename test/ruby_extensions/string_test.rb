@@ -131,6 +131,12 @@ class StringTest < Test::Unit::TestCase
       assert_equal 1.0, "abba dabba 1 dabba doo".from_currency_to_f
     end
     
+    should_have_instance_methods 'to_time_at'
+    should "be convertable to a time at" do
+      tnow = Time.now.to_i
+      assert_equal Time.at(tnow), tnow.to_s.to_time_at
+    end
+    
     context "with activesupport extensions" do
       
       should_have_class_methods 'camelize'

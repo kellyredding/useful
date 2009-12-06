@@ -8,7 +8,7 @@ class FixnumTest < Test::Unit::TestCase
     end
     subject { @fixnum }
     
-    should_have_instance_methods 'pad', 'to_nearest_value', 'to_time', 'ordinalize'
+    should_have_instance_methods 'pad', 'to_nearest_value', 'to_time', 'to_time_at', 'ordinalize'
     
     should "pad to 3 wide with zeros by default" do
       assert_equal "005", subject.pad

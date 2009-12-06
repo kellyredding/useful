@@ -84,6 +84,10 @@ module Useful::RubyExtensions::String
       self.gsub(/[^0-9.-]/,'').to_f
     end
     
+    def to_time_at
+      Time.at(self.to_i)
+    end
+
   end
   
   module FromActivesupport
@@ -276,7 +280,7 @@ module Useful::RubyExtensions::String
       def to_date
         ::Date.civil(*::Date._parse(self, false).values_at(:year, :mon, :mday).map { |arg| arg || 0 }) rescue nil
       end unless "".respond_to?('to_date')
-
+      
     end
     
   end
