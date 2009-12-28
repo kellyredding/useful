@@ -91,9 +91,10 @@ module Useful::ErbHelpers::Links
     options[:rel] ||= "stylesheet"
     options[:type] ||= "text/css"
     options[:media] ||=  "all"
+    environment = options.delete(:environment)
     Array(srcs).collect do |src|
       #TODO: write sinatra helper to auto set env with Sinatra::Application.environment.to_s
-      options[:href] = build_src_href(src, :default_path => "stylesheets", :extension => ".css", :environment => options.delete(:environment))
+      options[:href] = build_src_href(src, :default_path => "stylesheets", :extension => ".css", :environment => environment)
       tag(:link, options)
     end.join("\n")
   end
@@ -113,9 +114,10 @@ module Useful::ErbHelpers::Links
   def javascript_include_tag(*args)
     srcs, options = handle_srcs_options(args)
     options[:type] ||= "text/javascript"
+    environment = options.delete(:environment)
     Array(srcs).collect do |src|
       #TODO: write sinatra helper to auto set env with Sinatra::Application.environment.to_s
-      options[:src] = build_src_href(src, :default_path => "javascripts", :extension => ".js", :environment => options.delete(:environment))
+      options[:src] = build_src_href(src, :default_path => "javascripts", :extension => ".js", :environment => environment)
       tag(:script, options) { '' }
     end.join("\n")
   end
