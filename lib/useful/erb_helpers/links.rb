@@ -76,10 +76,10 @@ module Useful::ErbHelpers::Links
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css?12345678">
   # EX : stylesheet_link_tag 'default', :media => 'screen'
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css">
-  # EX : stylesheet_link_tag 'default', 'test, :media => 'screen'
+  # EX : stylesheet_link_tag 'default', 'test', :media => 'screen'
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css">
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/test.css">
-  # EX : stylesheet_link_tag ['default', 'test], :media => 'screen'
+  # EX : stylesheet_link_tag ['default', 'test'], :media => 'screen'
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css">
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/test.css">
   # EX : stylesheet_link_tag 'default', '/other_sheets/other', '/other_sheets/another.css'
