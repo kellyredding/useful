@@ -10,12 +10,12 @@ Capistrano::Configuration.instance.load do
     after 'deploy',       'deploy:cleanup_deploy'
 
     desc '_: (useful) Create the shared log/apache2 folder'
-    task :create_apache_log_folder, :roles => :app do 
+    task :create_apache_log_folder, :roles => :app, :except => { :no_release => true } do 
       run "mkdir -p #{shared_path}/log/apache2/"
     end
 
     desc "_: (useful) Enables web and runs deploy:cleanup"
-    task :cleanup_deploy, :roles => :app do
+    task :cleanup_deploy, :roles => :app, :except => { :no_release => true } do
       web.enable
       cleanup
     end
