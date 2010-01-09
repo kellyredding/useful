@@ -6,7 +6,7 @@ Capistrano::Configuration.instance.load do
 
   namespace :deploy do
 
-    desc "_: (#{application}) no migrating needed, this one does nothing..."
+    desc "_: (useful) no migrating needed, this one does nothing..."
     task :migrate, :roles => :app, :only => { :primary => true } do
     end
   

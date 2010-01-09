@@ -9,8 +9,8 @@ Capistrano::Configuration.instance.load do
     # These tasks override the default cap migration tasks
     # => allows for running your migrations on the primary app server only
   
-    desc "_: (#{application}) Bring down site, deploy with migrations on primary app server only, bring site back up."
-    task :migrations, :roles => :app, :only => { :primary => true } do
+    desc "_: (useful) Stop, update, migrate, start"
+    task :migrations, :roles => :app do
       stop
       update
       migrate
@@ -19,8 +19,7 @@ Capistrano::Configuration.instance.load do
 
     # Copied from http://github.com/jamis/capistrano/blob/df0935c4c135207582da343aacdd4cf080fcfed0/lib/capistrano/recipes/deploy.rb
     # => changed :roles => :db to :roles => :app so that migrations will run on the primary app server only
-    # => also added , :pty => false as an argument on the run command
-    desc "_: (#{application}) port of default cap task to only run on primary app server"
+    desc "_: (useful) port of default cap task to only run on primary app server"
     task :migrate, :roles => :app, :only => { :primary => true } do
       rake = fetch(:rake, "rake")
       rails_env = fetch(:rails_env, "production")
