@@ -16,7 +16,7 @@ Capistrano::Configuration.instance.load do
     end
 
     desc '_: (useful) Links the shared cache folders into the public directory'
-    task :create_cache_folders, :roles => :app, :except => { :no_release => true } do 
+    task :link_cache_folders, :roles => :app, :except => { :no_release => true } do 
       run "ln -s #{shared_path}/cache #{release_path}/public"
       run "ln -s #{shared_path}/cache-rack #{release_path}"
     end
