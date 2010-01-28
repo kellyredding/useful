@@ -38,10 +38,3 @@ Rake::TestTask.new do |t|
   t.test_files = FileList["test/**/*_test.rb"]
   t.verbose = true
 end
-
-require 'cucumber'
-require 'cucumber/rake/task'
-
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "test/features --format pretty" 
-end

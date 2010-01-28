@@ -19,4 +19,3 @@ require 'useful/erb_helpers'
 require 'useful/ruby_extensions'
 # Run all tests verifying that they play nice with active support
 #require 'useful/ruby_extensions_with_activesupport'
-
