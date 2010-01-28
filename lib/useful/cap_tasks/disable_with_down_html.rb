@@ -12,7 +12,7 @@ Capistrano::Configuration.instance.load do
     
     desc "_: (useful) Updates the shared down html page with the version from source"
     task :update_down_html, :roles => :app, :except => { :no_release => true } do
-      run "cp #{shared_path}/#{down_html}.html #{current_path}/public/#{down_html}.html"
+      run "cp #{current_path}/public/#{down_html}.html #{shared_path}/#{down_html}.html"
     end
 
     namespace :web do
