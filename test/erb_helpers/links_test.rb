@@ -84,12 +84,16 @@ class LinksTest < Test::Unit::TestCase
         @img_name = "charles.jpg"
         @img_def_src = "/images/#{@img_name}"
         @img_cust_src = "/in_charge/#{@img_name}"
+        @img_abs_src = "http://test.example.com/images/#{@img_name}"
       end
       should "render without a path" do
         assert_equal tag(:img, @opts.merge(:src => @img_def_src)), image_tag(@img_name, @opts)
       end
       should "render with a path" do
         assert_equal tag(:img, @opts.merge(:src => @img_cust_src)), image_tag(@img_cust_src, @opts)
+      end
+      should "render with an absolute path" do
+        assert_equal tag(:img, @opts.merge(:src => @img_abs_src)), image_tag(@img_abs_src, @opts)
       end
     end
     
@@ -115,6 +119,12 @@ class LinksTest < Test::Unit::TestCase
         @opts[:media] = 'screen'
         @opts[:href] = @def[1]
         assert_equal tag(:link, @opts), stylesheet_link_tag(@def[0], :media => 'screen')
+      end
+      should "render an absolute link" do
+        @opts[:href] = "http://test.example.com/styles/test.css"
+        assert_equal tag(:link, @opts), stylesheet_link_tag(@opts[:href])
+        @opts[:href] = "https://test.example.com/styles/test.css"
+        assert_equal tag(:link, @opts), stylesheet_link_tag(@opts[:href])
       end
       context "with two stylsheets and options" do
         setup do

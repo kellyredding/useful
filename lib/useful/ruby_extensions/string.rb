@@ -105,7 +105,7 @@ module Useful::RubyExtensions::String
       #   "active_record".camelize                # => "ActiveRecord"
       #   "active_record".camelize(:lower)        # => "activeRecord"
       #   "active_record/errors".camelize         # => "ActiveRecord::Errors"
-      #   "active_record/errors".camelize(:lower) # => "activeRecord::Errors"
+      #   "active_record/error".camelize(:lower)  # => "activeRecord::Error"
       def camelize(lower_case_and_underscored_word, first_letter_in_uppercase = true)
         if first_letter_in_uppercase
           lower_case_and_underscored_word.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }

@@ -8,6 +8,8 @@ module Useful::ErbHelpers; end
 
 module Useful::ErbHelpers::Links
   
+  ABSOLUTE_LINK_PATH = /\Ahttp[s]*:\/\//
+  
   include Useful::ErbHelpers::Common
   
   # helper to emulate action view's 'link_to'
@@ -65,7 +67,11 @@ module Useful::ErbHelpers::Links
   # EX : image_tag '/better/logo.jpg'
   #  => <img src="/better/logo.jpg" />
   def image_tag(source,options={})
-    options[:src] = ['/'].include?(source[0..0]) ? source : "/images/#{source}"
+    options[:src] = if source =~ ABSOLUTE_LINK_PATH
+      source
+    else
+      ['/'].include?(source[0..0]) ? source : "/images/#{source}"
+    end
     tag(:img, options)
   end
 
@@ -146,12 +152,16 @@ module Useful::ErbHelpers::Links
   end
   
   def build_src_href(src, options)
-    href = ""
     src = src.to_s
-    href += ['/'].include?(src[0..0]) ? src : "/#{options[:default_path]}/#{src}"
-    href += options[:extension] unless src.include?(options[:extension])
-    href += "?#{Time.now.to_i}" if options[:environment].to_s == 'development'
-    href
+    if src =~ ABSOLUTE_LINK_PATH
+      src
+    else
+      href = ""
+      href += ['/'].include?(src[0..0]) ? src : "/#{options[:default_path]}/#{src}"
+      href += options[:extension] unless src.include?(options[:extension])
+      href += "?#{Time.now.to_i}" if options[:environment].to_s == 'development'
+      href
+    end
   end
 
 end
