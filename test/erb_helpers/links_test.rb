@@ -112,8 +112,16 @@ class LinksTest < Test::Unit::TestCase
         @opts[:href] = @def[1]
         assert_equal tag(:link, @opts), stylesheet_link_tag(@def[0])
       end
-      should "render a development environment link" do
-        assert_match @def_dev_match, stylesheet_link_tag('default', :environment => 'development')
+      should "render a with timestamp link" do
+        first = stylesheet_link_tag('default', :timestamp => true)
+        assert_match @def_dev_match, first
+        sleep 1
+        second = stylesheet_link_tag('default', :timestamp => true)
+        assert_match @def_dev_match, second
+        assert_not_equal first, second
+        time_i = Time.now.to_i
+        third = stylesheet_link_tag('default', :timestamp => time_i)
+        assert third.include?("/default.css?#{time_i}")
       end
       should "render a single link with options" do
         @opts[:media] = 'screen'
@@ -181,7 +189,7 @@ class LinksTest < Test::Unit::TestCase
         assert_equal tag(:script, @opts) { '' }, javascript_include_tag('default')
       end
       should "render a development environment source" do
-        assert_match @def_dev_match, javascript_include_tag('default', :environment => 'development')
+        assert_match @def_dev_match, javascript_include_tag('default', :timestamp => true)
       end
       context "with two sources" do
         setup do

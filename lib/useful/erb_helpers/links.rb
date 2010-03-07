@@ -78,7 +78,7 @@ module Useful::ErbHelpers::Links
   # helper to emulate activesupport's 'stylesheet_link_tag'
   # EX : stylesheet_link_tag 'default'
   #  => <link rel="stylesheet" type="text/css" media="all" href="/stylesheets/default.css">
-  # EX : stylesheet_link_tag 'default', :environment => 'development'
+  # EX : stylesheet_link_tag 'default', :timestamp => true
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css?12345678">
   # EX : stylesheet_link_tag 'default', :media => 'screen'
   #  => <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/default.css">
@@ -97,10 +97,10 @@ module Useful::ErbHelpers::Links
     options[:rel] ||= "stylesheet"
     options[:type] ||= "text/css"
     options[:media] ||=  "all"
-    environment = options.delete(:environment)
+    timestamp = options.delete(:timestamp)
     Array(srcs).collect do |src|
       #TODO: write sinatra helper to auto set env with Sinatra::Application.environment.to_s
-      options[:href] = build_src_href(src, :default_path => "stylesheets", :extension => ".css", :environment => environment)
+      options[:href] = build_src_href(src, :default_path => "stylesheets", :extension => ".css", :timestamp => timestamp)
       tag(:link, options)
     end.join("\n")
   end
@@ -120,10 +120,10 @@ module Useful::ErbHelpers::Links
   def javascript_include_tag(*args)
     srcs, options = handle_srcs_options(args)
     options[:type] ||= "text/javascript"
-    environment = options.delete(:environment)
+    timestamp = options.delete(:timestamp)
     Array(srcs).collect do |src|
       #TODO: write sinatra helper to auto set env with Sinatra::Application.environment.to_s
-      options[:src] = build_src_href(src, :default_path => "javascripts", :extension => ".js", :environment => environment)
+      options[:src] = build_src_href(src, :default_path => "javascripts", :extension => ".js", :timestamp => timestamp)
       tag(:script, options) { '' }
     end.join("\n")
   end
@@ -152,6 +152,7 @@ module Useful::ErbHelpers::Links
   end
   
   def build_src_href(src, options)
+    options[:timestamp] = Time.now.to_i if options[:timestamp] == true
     src = src.to_s
     if src =~ ABSOLUTE_LINK_PATH
       src
@@ -159,7 +160,7 @@ module Useful::ErbHelpers::Links
       href = ""
       href += ['/'].include?(src[0..0]) ? src : "/#{options[:default_path]}/#{src}"
       href += options[:extension] unless src.include?(options[:extension])
-      href += "?#{Time.now.to_i}" if options[:environment].to_s == 'development'
+      href += "?#{options[:timestamp]}" if options[:timestamp] 
       href
     end
   end
