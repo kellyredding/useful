@@ -160,7 +160,7 @@ module Useful::ErbHelpers::Links
       href = ""
       href += ['/'].include?(src[0..0]) ? src : "/#{options[:default_path]}/#{src}"
       href += options[:extension] unless src.include?(options[:extension])
-      href += "?#{options[:timestamp]}" if options[:timestamp] 
+      href += "?#{options[:timestamp]}" if options[:timestamp] && !src.include?('?')
       href
     end
   end
