@@ -6,7 +6,7 @@ Capistrano::Configuration.instance.load do
 
   namespace :deploy do
 
-    after 'deploy:setup', 'deploy:create_apache_log_folder'
+    after 'deploy:setup', 'deploy:create_cache_folders'
     after 'deploy:update_code', 'deploy:link_cache_folders'
 
     desc '_: (useful) Creates the shared cache folders'
