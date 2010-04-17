@@ -173,6 +173,15 @@ module Useful::RubyExtensions::String
         underscored_word.gsub(/_/, '-')
       end unless ::String.respond_to?('dasherize')
 
+      # makes string suitable for a dashed url parameter string
+      #
+      # Example:
+      #   "ActiveRecord" # => "active-record"
+      #   "Active Record is_awesome" # => "active-record-is-awesome"
+      def parameterize(phrase)
+        phrase.underscore.gsub(/\s+/, '_').dasherize
+      end unless ::String.respond_to?('parameterize')
+
       # Removes the module part from the expression in the string.
       #
       # Examples:
@@ -256,6 +265,10 @@ module Useful::RubyExtensions::String
       def dasherize
         self.class.dasherize(self)
       end unless "".respond_to?('dasherize')
+
+      def parameterize
+        self.class.parameterize(self)
+      end unless "".respond_to?('parameterize')
 
       def demodulize
         self.class.demodulize(self)

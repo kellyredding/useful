@@ -195,6 +195,13 @@ class StringTest < Test::Unit::TestCase
         assert_equal "active-record is-awesome", "active_record is_awesome".dasherize
       end
 
+      should_have_class_methods 'parameterize'
+      should_have_instance_methods 'parameterize'
+      should "parameterize both at the class and instance levels" do
+        assert_equal "active-record", String.parameterize("ActiveRecord")
+        assert_equal "active-record-is-awesome", "Active Record is_awesome".parameterize
+      end
+
       should_have_class_methods 'demodulize'
       should_have_instance_methods 'demodulize'
       should "demodulize both at the class and instance levels" do
