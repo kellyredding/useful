@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DateTest < Test::Unit::TestCase
-  
+
   context "an extended Date" do
     setup do
       @date = Date.today
@@ -19,9 +19,9 @@ class DateTest < Test::Unit::TestCase
       @nwed = Date.strptime('2009-10-21')
     end
     subject { @date }
-    
+
     should_have_instance_methods 'week_days_between'
-    
+
     should "know how many week days are between it and another date" do
       assert_equal 0, @psun.week_days_between(@psun)
       assert_equal 1, @psun.week_days_between(@mon)
@@ -34,12 +34,12 @@ class DateTest < Test::Unit::TestCase
       assert_equal 6, @psun.week_days_between(@nmon)
       assert_equal 7, @psun.week_days_between(@ntue)
       assert_equal 8, @psun.week_days_between(@nwed)
-      
+
       assert_equal 1, @mon.week_days_between(@mon)
       assert_equal 2, @mon.week_days_between(@tue)
       assert_equal 3, @mon.week_days_between(@wed)
     end
 
   end
-  
+
 end

@@ -1,20 +1,21 @@
+require 'stringio'
 require 'useful/ruby_extensions/nil_class'
 
 module Useful; end
 module Useful::RubyExtensions; end
 
 module Useful::RubyExtensions::Object
-  
+
   def false?
     self == false
   end
   alias_method :is_false?, :false?
-  
+
   def true?
     self == true
   end
   alias_method :is_true?, :true?
-  
+
   def capture_std_output
     out = ::StringIO.new
     err = ::StringIO.new
@@ -26,7 +27,7 @@ module Useful::RubyExtensions::Object
     $stdout = STDOUT
     $stderr = STDERR
   end
-  
+
   module FromActivesupport
 
     def blank?
@@ -59,7 +60,7 @@ module Useful::RubyExtensions::Object
     #  end
     #
     #  foo # => ['bar', 'baz']
-    #  
+    #
     #  # returning with a block argument
     #  def foo
     #    returning [] do |values|
@@ -67,7 +68,7 @@ module Useful::RubyExtensions::Object
     #      values << 'baz'
     #    end
     #  end
-    #  
+    #
     #  foo # => ['bar', 'baz']
     def returning(value)
       yield(value)
@@ -88,11 +89,11 @@ module Useful::RubyExtensions::Object
       yield self
       self
     end unless ::Object.new.respond_to?('tap')
-    
-    # Invokes the method identified by the symbol +method+, passing it any arguments 
+
+    # Invokes the method identified by the symbol +method+, passing it any arguments
     # and/or the block specified, just like the regular Ruby <tt>Object#send</tt> does.
     #
-    # *Unlike* that method however, a +NoMethodError+ exception will *not* be raised 
+    # *Unlike* that method however, a +NoMethodError+ exception will *not* be raised
     # and +nil+ will be returned instead, if the receiving object is a +nil+ object or NilClass.
     #
     # ==== Examples
@@ -109,7 +110,7 @@ module Useful::RubyExtensions::Object
     #   Person.try(:find, 1)
     #   @people.try(:collect) {|p| p.name}
     #--
-    # This method definition below is for rdoc purposes only. The alias_method call 
+    # This method definition below is for rdoc purposes only. The alias_method call
     # below overrides it as an optimization since +try+ behaves like +Object#send+,
     # unless called on +NilClass+.
     # => see try method definition on the NilClass extensions for details.
@@ -122,11 +123,11 @@ module Useful::RubyExtensions::Object
     end
 
   end
-  
+
   def self.included(receiver)
     receiver.send :include, FromActivesupport
   end
-  
+
 end
 
 class Object
