@@ -46,7 +46,7 @@ module Useful::RubyExtensions::String
 
     # returns a new string, with hash values sub'd in where hash keys exist in original string
     def hsub(hash)
-      self.class.hsub(self.clone, hash)
+      self.class.hsub(self.dup, hash)
     end
     # substitutes the keys in hash that exist in the string, with values of hash
     def hsub!(hash)

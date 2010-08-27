@@ -20,7 +20,7 @@ module Useful::RubyExtensions::Array
 
   # returns a new array, containing the contents of an_a with the contents of this array, removing duplicates
   def merge(an_a)
-    self.class.merge(self.clone, an_a)
+    self.class.merge(self.dup, an_a)
   end
   # adds the contents of an_a to this array, removing duplicates (inline version of #merge)
   def merge!(an_a)

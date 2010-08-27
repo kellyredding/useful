@@ -41,14 +41,14 @@ module Useful::RubyExtensions::Hash
   module InstanceMethods
     
     def only(*keys)
-      self.class.only(self.clone, keys)
+      self.class.only(self.dup, keys)
     end
     def only!(*keys)
       self.class.only(self, keys)
     end
 
     def except(*keys)
-      self.class.except(self.clone, keys)
+      self.class.except(self.dup, keys)
     end
     
     def except!(*keys)
@@ -56,7 +56,7 @@ module Useful::RubyExtensions::Hash
     end
 
     def nillify
-      self.class.nillify(self.clone)
+      self.class.nillify(self.dup)
     end
     def nillify!
       self.class.nillify(self)
@@ -143,7 +143,7 @@ module Useful::RubyExtensions::Hash
       
       # Return a new hash with all keys converted to strings.
       def stringify_keys
-        self.class.stringify_keys(self.clone)
+        self.class.stringify_keys(self.dup)
       end unless {}.respond_to?('stringify_keys')
       # Destructively convert all keys to strings. 
       def stringify_keys!
@@ -152,7 +152,7 @@ module Useful::RubyExtensions::Hash
 
       # Return a new hash with all keys converted to strings.
       def symbolize_keys
-        self.class.symbolize_keys(self.clone)
+        self.class.symbolize_keys(self.dup)
       end unless {}.respond_to?('symbolize_keys')
       # Destructively convert all keys to strings. 
       def symbolize_keys!
