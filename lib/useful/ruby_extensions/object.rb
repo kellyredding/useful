@@ -42,7 +42,11 @@ module Useful::RubyExtensions::Object
         result[:out] = stdout_io.gets
         result[:err] = stderr_io.gets
       end
-      block.call(status, status.success? ? result[:out] : result[:err])
+      if block
+        block.call(status, status.success? ? result[:out] : result[:err])
+      else
+        status
+      end
     end
   end
 

@@ -109,6 +109,8 @@ class ObjectTest < Test::Unit::TestCase
         assert_equal nil, result, "sudo didn't return the right success result"
       end
 
+      assert_equal 0, sudo("cd ~").to_i, "sudo w/ no block should return successfully"
+
       sudo("cd ~/asdgasdgsdgsdgsadasdhasdh") do |status, result|
         assert status.to_i != 0, "sudo didn't return an error status"
         assert result =~ /No such file or directory/, "sudo didn't return the right error result"
