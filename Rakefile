@@ -18,7 +18,10 @@ spec = Gem::Specification.new do |s|
   s.homepage         = 'http://code.kelredd.com'
   s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib}/**/*")
   # s.executables    = ['useful']
-  
+
+  s.add_development_dependency("shoulda", [">= 2.10.2"])
+  s.add_development_dependency("leftright", [">= 0.0.6"])
+
   s.add_dependency('json')
 end
 
