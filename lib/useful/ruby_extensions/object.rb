@@ -28,6 +28,24 @@ module Useful::RubyExtensions::Object
     $stderr = STDERR
   end
 
+  # Invokes a system command using `` and
+  # pass the status and result to a given block
+  def sudo(cmd, logger=nil, &block)
+    begin
+      require 'open4' unless defined?(::Open4)
+    rescue LoadError => err
+      puts "you need open4 to run the sudo helper: gem install open4"
+    else
+      logger.debug "`sudo #{cmd}` ..." if logger && logger.respond_to?(:debug)
+      result = {}
+      status = Open4.popen4("sudo #{cmd}") do |pid, stdin_io, stdout_io, stderr_io|
+        result[:out] = stdout_io.gets
+        result[:err] = stderr_io.gets
+      end
+      block.call(status, status.success? ? result[:out] : result[:err])
+    end
+  end
+
   module FromActivesupport
 
     def blank?

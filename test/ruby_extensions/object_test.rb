@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ObjectTest < Test::Unit::TestCase
-  
+
   context "an extended Object" do
     setup do
       @obj = Object.new
@@ -9,9 +9,9 @@ class ObjectTest < Test::Unit::TestCase
       @false = false
     end
     subject { @obj }
-    
+
     should_have_instance_methods 'false?', 'is_false?', 'true?', 'is_true?'
-    
+
     should "know if its true" do
       assert @true.true?
       assert @true.is_true?
@@ -25,7 +25,7 @@ class ObjectTest < Test::Unit::TestCase
       assert @false.is_false?
     end
 
-    should_have_instance_methods 'capture_std_output'    
+    should_have_instance_methods 'capture_std_output'
     should "capture $stdout" do
       out, err = capture_std_output do
         p "some output"
@@ -52,7 +52,7 @@ class ObjectTest < Test::Unit::TestCase
     end
 
     should_have_instance_methods 'blank?', 'returning', 'tap', 'try'
-    
+
     should "know if it is blank" do
       [nil, false,"",[],{}].each do |obj|
         assert obj.blank?
@@ -61,7 +61,7 @@ class ObjectTest < Test::Unit::TestCase
         assert !obj.blank?
       end
     end
-    
+
     should "handle returning with a local variable" do
       returning values = [] do
         values << 1
@@ -69,7 +69,7 @@ class ObjectTest < Test::Unit::TestCase
       end
       assert_equal [1,2], values
     end
-    
+
     should "handle returning with a block argument" do
       val = returning [] do |values|
         values << 1
@@ -87,7 +87,7 @@ class ObjectTest < Test::Unit::TestCase
         to_s
       assert_equal [1..10, [2,4,6,8,10]], tapped_values
     end
-    
+
     should "try method calls with nil safety" do
       obj = [1,2,3]
       nested_obj = [['a','b','c'], 1, 2, 3, nil]
@@ -95,9 +95,26 @@ class ObjectTest < Test::Unit::TestCase
       assert_equal nested_obj.first.first, nested_obj.try(:first).try(:first)
       assert_equal nil, nested_obj.try(:last).try(:first)
     end
-    
 
+    should "execute commands with sudo" do
+      sudo("echo \"sudo cmd\"") do |status, result|
+        assert_equal 0, status.to_i, "sudo didn't return status number correctly"
+        assert_equal "0", status.to_s, "sudo didn't return status string correctly"
+        assert_equal "sudo cmd\n", result, "sudo didn't return the right result"
+      end
+
+      sudo("cd ~") do |status, result|
+        assert_equal 0, status.to_i, "sudo didn't return status number correctly"
+        assert_equal "0", status.to_s, "sudo didn't return status string correctly"
+        assert_equal nil, result, "sudo didn't return the right success result"
+      end
+
+      sudo("cd ~/asdgasdgsdgsdgsadasdhasdh") do |status, result|
+        assert status.to_i != 0, "sudo didn't return an error status"
+        assert result =~ /No such file or directory/, "sudo didn't return the right error result"
+      end
+    end
 
   end
-  
+
 end
