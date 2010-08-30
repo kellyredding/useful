@@ -23,6 +23,17 @@ module Useful::RubyHelpers::Logger
       end
     end
 
+    [:debug, :info, :warn, :error].each do |level|
+      define_method(level) do |*args|
+        if args.last.kind_of?(::Hash)
+          args.last[:level] = level
+        else
+          args << {:level => level}
+        end
+        log(*args)
+      end
+    end
+
     private
 
     def logger
@@ -72,6 +83,12 @@ module Useful::RubyHelpers::Logger
   module InstanceMethods
     def log(*args)
       self.class.send(:log, *args)
+    end
+
+    [:debug, :info, :warn, :error].each do |level|
+      define_method(level) do |*args|
+        self.class.send(level, *args)
+      end
     end
   end
 
