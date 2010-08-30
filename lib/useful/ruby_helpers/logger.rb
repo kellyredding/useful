@@ -21,9 +21,8 @@ module Useful::RubyHelpers::Logger
       name, msg, opts = handle_log_args(args)
       opts[:level] ||= 'debug'
       opts[:color] = true if opts[:color].nil?
-      opts[:prefix] ||= "*"
       unless logger.respond_to?(opts[:level].to_s)
-        raise Exception, "no '#{opts[:level].upcase}' logger provided"
+        raise Exception, "no '#{opts[:level].to_s.upcase}' logger provided"
       end
       if name.empty? && msg.empty?
         nil
@@ -52,10 +51,20 @@ module Useful::RubyHelpers::Logger
     end
 
     def formatted_log_msg(name, msg, opts)
+      opts[:prefix] ||= case opts[:level].to_s
+      when 'info'
+        "*"  # green
+      when 'warn'
+        "~"  # cyan
+      when 'error'
+        "!"  # red
+      else # debug
+        "-"
+      end
       color_level = opts[:color] ? opts[:level].to_s : 'none'
       color = case color_level
       when 'debug'
-        "33;1"  # yellow underline
+        "33;1"  # yellow
       when 'info'
         "32;1"  # green
       when 'warn'
