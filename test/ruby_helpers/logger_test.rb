@@ -42,14 +42,14 @@ module RubyHelpers
           [:debug, :info, :warn, :error].each do |level|
             assert LoggingGood.respond_to?(level), "no :#{level} class method"
           end
-          #assert LoggingGood.respond_to?(:benchmark), "no :benchmark class method"
+          assert LoggingGood.respond_to?(:benchmark), "no :benchmark class method"
         end
         should "have_instance_methods" do
           assert @logging.respond_to?(:log), "no :log instance method"
           [:debug, :info, :warn, :error].each do |level|
             assert @logging.respond_to?(level), "no :#{level} instance method"
           end
-          #assert @logging.respond_to?(:benchmark), "no :benchmark instance method"
+          assert @logging.respond_to?(:benchmark), "no :benchmark instance method"
         end
 
         should "log at the debug level" do
@@ -122,7 +122,12 @@ module RubyHelpers
           assert_match %r{#{msg}}, log_msg, "msg not found"
         end
 
-
+        should "benchmark with log options" do
+          res = @logging.benchmark("a fancy benchmark with no name") do
+            "this worked"
+          end
+          assert_match /this worked/, res, "it didn't work"
+        end
 
       end
     end

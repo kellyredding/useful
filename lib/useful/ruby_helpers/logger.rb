@@ -6,6 +6,17 @@ require 'useful/ruby_extensions/object'
 module Useful::RubyHelpers::Logger
 
   module ClassMethods
+    def benchmark(*args, &block)
+      require 'benchmark'
+      name, msg, opts = handle_log_args(args)
+      result = nil
+      ms = Benchmark.measure { result = block.call }.real
+      name += ' ' unless name.empty?
+      name += '(%.1fms)' % [ms*1000]
+      log(name, msg, opts)
+      result
+    end
+
     def log(*args)
       name, msg, opts = handle_log_args(args)
       opts[:level] ||= 'debug'
@@ -81,6 +92,10 @@ module Useful::RubyHelpers::Logger
 
 
   module InstanceMethods
+    def benchmark(*args, &block)
+      self.class.send(:benchmark, *args, &block)
+    end
+
     def log(*args)
       self.class.send(:log, *args)
     end
