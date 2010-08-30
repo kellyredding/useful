@@ -55,21 +55,25 @@ module RubyHelpers
         should "log at the debug level" do
           log_msg = @logging.log("a debug level message", :level => :debug)
           assert_match /33;1/, log_msg, "not the debug level"
+          assert_match /-/, log_msg, "not the debug level"
         end
 
         should "log at the info level" do
           log_msg = @logging.log("an info level message", :level => :info)
           assert_match /32;1/, log_msg, "not the info level"
+          assert_match /\*/, log_msg, "not the debug level"
         end
 
         should "log at the warn level" do
           log_msg = @logging.log("a warn level message", :level => :warn)
           assert_match /36;1/, log_msg, "not the warn level"
+          assert_match /~/, log_msg, "not the debug level"
         end
 
         should "log at the error level" do
           log_msg = @logging.log("an error level message", :level => :error)
           assert_match /31;1/, log_msg, "not the error level"
+          assert_match /\!/, log_msg, "not the debug level"
         end
 
         should "log to levels through direct calls" do
@@ -127,6 +131,13 @@ module RubyHelpers
             "this worked"
           end
           assert_match /this worked/, res, "it didn't work"
+        end
+
+        should "prepend newlines if told to" do
+          assert_match %r{#{"\n"*5}}, @logging.log("blah", :newlines => 5), "didn't add correct newlines"
+          assert_nothing_raised do
+            assert_match %r{#{"\n"*5}}, @logging.log("blah", :newlines => -5), "didn't handle newlines correctly"
+          end
         end
 
       end
