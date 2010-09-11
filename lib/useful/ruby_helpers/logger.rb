@@ -50,18 +50,11 @@ module Useful::RubyHelpers::Logger
     end
 
     def formatted_log_msg(name, msg, opts)
+      name = name.strip
+      msg = msg.strip
       opts[:newlines] ||= 0
       opts[:color] = true if opts[:color].nil?
-      opts[:prefix] ||= case opts[:level].to_s
-      when 'info'
-        "*"  # green
-      when 'warn'
-        "~"  # cyan
-      when 'error'
-        "!"  # red
-      else # debug
-        "-"
-      end
+
       color_level = opts[:color] ? opts[:level].to_s : 'none'
       color = case color_level
       when 'debug'
@@ -78,7 +71,8 @@ module Useful::RubyHelpers::Logger
       end
       color_reg = "0;#{color}"
       color_underlined = "4;#{color}"
-      "\e[0m#{"\n"*opts[:newlines].to_i.abs}  \e[#{color_reg}m#{opts[:prefix]}\e[0m#{opts[:prefix].empty? ? '' : '  '}\e[#{color_underlined}m#{name}\e[0m#{name.empty? ? '' : '  '}#{msg}"
+
+      "\e[0m#{"\n"*opts[:newlines].to_i.abs}  \e[#{color_underlined}m#{name}\e[0m#{name.empty? ? '' : "\t"}#{msg}"
     end
 
     def handle_log_args(args)

@@ -55,25 +55,21 @@ module RubyHelpers
         should "log at the debug level" do
           log_msg = @logging.log("a debug level message", :level => :debug)
           assert_match /33;1/, log_msg, "not the debug level"
-          assert_match /-/, log_msg, "not the debug level"
         end
 
         should "log at the info level" do
           log_msg = @logging.log("an info level message", :level => :info)
           assert_match /32;1/, log_msg, "not the info level"
-          assert_match /\*/, log_msg, "not the debug level"
         end
 
         should "log at the warn level" do
           log_msg = @logging.log("a warn level message", :level => :warn)
           assert_match /36;1/, log_msg, "not the warn level"
-          assert_match /~/, log_msg, "not the debug level"
         end
 
         should "log at the error level" do
           log_msg = @logging.log("an error level message", :level => :error)
           assert_match /31;1/, log_msg, "not the error level"
-          assert_match /\!/, log_msg, "not the debug level"
         end
 
         should "log to levels through direct calls" do
@@ -114,7 +110,7 @@ module RubyHelpers
         should "log a msg with passed options if only 2 args are passed, last one hash" do
           msg = "2 args, opts empty prefix"
           log_msg = @logging.log(msg, {:prefix => ""})
-          assert_match "\e[0m  \e[0;33;1m\e[0m\e[4;33;1m\e[0m", log_msg, "empty prefix, name not found"
+          assert_match "\e[0m  \e[4;33;1m\e[0m", log_msg, "empty prefix, name not found"
           assert_match %r{#{msg}}, log_msg, "msg not found"
         end
 
@@ -122,7 +118,7 @@ module RubyHelpers
           name = "Another named msg:"
           msg = "3 args, opts empty prefix, opts no color"
           log_msg = @logging.log(name, msg, {:color => false, :prefix => ""})
-          assert_match "\e[0m  \e[0;0m\e[0m\e[4;0m", log_msg, "name with no color not found"
+          assert_match "\e[0m  \e[4;0m", log_msg, "name with no color not found"
           assert_match %r{#{msg}}, log_msg, "msg not found"
         end
 
