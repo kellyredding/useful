@@ -26,7 +26,7 @@ module Useful::RubyHelpers::Logger
       if name.empty? && msg.empty?
         nil
       else
-        returning formatted_log_msg(name, msg, opts) do |log_msg|
+        formatted_log_msg(name, msg, opts).tap do |log_msg|
           logger.send(opts[:level].to_s, log_msg)
         end
       end
