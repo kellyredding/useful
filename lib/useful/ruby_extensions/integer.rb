@@ -2,7 +2,7 @@ module Useful; end
 module Useful::RubyExtensions; end
 
 module Useful::RubyExtensions::Integer
-  
+
   # returns a string reprensentation of the number padded with pad_num to a specified length
   def pad(length = 3, pad_num = 0)
     self.to_s.rjust(length,pad_num.to_s) rescue self.to_s
@@ -21,16 +21,15 @@ module Useful::RubyExtensions::Integer
     end
     value
   end
-  
+
   # return a Time object for the given Integer
-  def to_time
+  def to_time_at
     Time.at(self)
   end
-  alias_method :to_time_at, :to_time
-  
+
   module FromActivesupport
     # All methods here will yield to their Activesupport versions, if defined
-    
+
     # Turns a number into an ordinal string used to denote the position in an
     # ordered sequence such as 1st, 2nd, 3rd, 4th.
     #
@@ -55,11 +54,11 @@ module Useful::RubyExtensions::Integer
     end
 
   end
-  
+
   def self.included(receiver)
     receiver.send :include, FromActivesupport
   end
-  
+
 end
 
 class Integer

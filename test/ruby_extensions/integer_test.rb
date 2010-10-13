@@ -1,15 +1,15 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class IntegerTest < Test::Unit::TestCase
-  
+
   context "an extended Integer" do
     setup do
       @integer = 5
     end
     subject { @integer }
-    
-    should_have_instance_methods 'pad', 'to_nearest_value', 'to_time', 'to_time_at', 'ordinalize'
-    
+
+    should_have_instance_methods 'pad', 'to_nearest_value', 'to_time_at', 'ordinalize'
+
     should "pad to 3 wide with zeros by default" do
       assert_equal "005", subject.pad
     end
@@ -18,7 +18,7 @@ class IntegerTest < Test::Unit::TestCase
       assert_equal "***5", subject.pad(4, '*')
       assert_equal "aba5", subject.pad(4, 'ab')
     end
-    
+
     should "show itself ordinalized" do
       {
         1 => "1st",
@@ -32,5 +32,5 @@ class IntegerTest < Test::Unit::TestCase
       }.each {|num, ord_str| assert_equal ord_str, num.ordinalize}
     end
   end
-  
+
 end
