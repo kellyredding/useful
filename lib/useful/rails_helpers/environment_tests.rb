@@ -6,11 +6,11 @@ module Useful::RailsExtensions::EnvironmentTests
   module ClassMethods
     
     def production? 
-      RAILS_ENV == 'production'
+      Rails.env == 'production'
     end
     
     def development? 
-      RAILS_ENV == 'development'
+      Rails.env == 'development'
     end
     
   end
