@@ -19,9 +19,7 @@ spec = Gem::Specification.new do |s|
   s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib}/**/*")
   # s.executables    = ['useful']
 
-  s.add_development_dependency("shoulda", [">= 2.10.2"])
-  s.add_development_dependency("leftright", [">= 0.0.6"])
-  s.add_development_dependency("log4r", [">= 1.1.0"])
+  s.add_development_dependency("test=belt", ["= 0.2.0"])
 
   s.add_dependency('json')
 end

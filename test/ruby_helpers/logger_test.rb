@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'fixtures/ruby_helpers/logging'
-require 'ruby-debug'
 
 
 module RubyHelpers
