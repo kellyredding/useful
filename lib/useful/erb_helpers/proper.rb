@@ -37,10 +37,20 @@ module Useful::ErbHelpers::Proper
     unchecked_value = options.delete(:unchecked_value)
     unchecked_value = '0' if unchecked_value.nil?
     disable_unchecked_value = options.delete(:disable_unchecked_value)
+    # ''.tap do |html|
+    #   html << input_tag(:hidden, name, unchecked_value, :id => "#{options[:id]}_hidden") unless disable_unchecked_value.is_true?
+    #   html << input_tag(:checkbox, name, value, options)
+    #   html << tag(:label, :for => options[:id]) { label_text } unless label_text.blank?
+    # end
     ''.tap do |html|
       html << input_tag(:hidden, name, unchecked_value, :id => "#{options[:id]}_hidden") unless disable_unchecked_value.is_true?
-      html << input_tag(:checkbox, name, value, options)
-      html << tag(:label, :for => options[:id]) { label_text } unless label_text.blank?
+      html << if label_text.blank?
+        input_tag(:checkbox, name, value, options)
+      else
+        tag(:label, :for => options[:id]) do
+          input_tag(:checkbox, name, value, options) + label_text
+        end
+      end
     end
   end
 
