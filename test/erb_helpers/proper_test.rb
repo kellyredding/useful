@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ProperTest < Test::Unit::TestCase
-  
+
   include Useful::ErbHelpers::Proper
 
   context "the erb helper" do
-    
+
     context "'proper_select_tag'" do
       setup do
         @name = 'user'
@@ -76,8 +76,9 @@ class ProperTest < Test::Unit::TestCase
       end
       should "render labeled check box" do
         label_text = 'complete ?'
-        expected = input_tag(:checkbox, @name, @value, @opts)
-        expected << tag(:label, :for => @opts[:id]) { label_text }
+        expected = tag(:label, :for => @opts[:id]) do
+          input_tag(:checkbox, @name, @value, @opts) + label_text
+        end
         erb_helper_clear_output_buffer
         result = proper_check_box_tag(@name, :label => label_text, :disable_unchecked_value => true)
         assert_equal expected, result
@@ -92,8 +93,9 @@ class ProperTest < Test::Unit::TestCase
       should "render labeled check box with an unchecked default value" do
         label_text = 'complete ?'
         expected = input_tag(:hidden, @name, '0', :id => "#{@opts[:id]}_hidden")
-        expected << input_tag(:checkbox, @name, @value, @opts)
-        expected << tag(:label, :for => @opts[:id]) { label_text }
+        expected << tag(:label, :for => @opts[:id]) do
+          input_tag(:checkbox, @name, @value, @opts) + label_text
+        end
         erb_helper_clear_output_buffer
         result = proper_check_box_tag(@name, :label => label_text)
         assert_equal expected, result
